@@ -131,7 +131,14 @@
 				<!-- /.sidebar-shortcuts -->
 
 				<ul class="nav nav-list">
-					
+					<li class="">
+						<a href="dept_hd_academic_year.php">
+							
+							<span class="menu-text">Add Accademic Year</span>
+						</a>
+
+						<b class="arrow"></b>
+					</li>
 					<li class="">
 						<a href="dept_hd_index.php">
 							
@@ -141,7 +148,7 @@
 						<b class="arrow"></b>
 					</li>
 					
-					<li class="">
+					<li class="active">
 						<a href="dept_hd_add_lecturer.php">
 							
 							<span class="menu-text">Add Lecturer</span>
@@ -167,10 +174,10 @@
 						<b class="arrow"></b>
 					</li>
 					
-					<li class="active">
-						<a href="dept_hd_ica.php">
+					<li class="">
+						<a href="dept_hd_custom.php">
 							
-							<span class="menu-text">ICA Format</span><br>
+							<span class="menu-text">Custom Evalution Method</span><br>
 							
 						</a>
 
@@ -222,10 +229,10 @@
 						<!-- /.ace-settings-container -->
 <div class="page-header">
 							<h1>
-								Assign Faculty admins
+								Add Lecturer
 								<small>
 									<i class="ace-icon fa fa-angle-double-right"></i>
-									
+									Add details
 								</small>
 							</h1>
 						</div>
@@ -244,11 +251,11 @@
 											<div class="pull-right tableTools-container"></div>
 										</div>
 										<div class="table-header">
-											Faculty details
+											Add Lecturer Name
 											
 										</div>
 											<br>
-										
+											* Please put a tick mark before doing edit or delete operations.
 										<!-- div.table-responsive -->
 
 										<!-- div.dataTables_borderWrap -->
@@ -256,42 +263,237 @@
 <html>
 
 
+
 <body>
 <center>
 <br>
 <?php
 include('db_config.php');
-$query ="SELECT * FROM faculty_names";
+
+$query ="SELECT lec_name FROM lecturers where lecturers.dept_id=(SELECT dep_id FROM signup where signup.username='".$_SESSION['sess_username']."')";
 $result=mysql_query($query);
-$i =1;
+$i =0;
+
+/* $deptid_query="SELECT * FROM signup where signup.username='".$_SESSION['sess_username']."'"; */
+$deptid_query="SELECT `dep_id` FROM `signup` WHERE `username`='dept_head'";
+$deptid_result=mysql_query($deptid_query) or die(mysql_error()); 
+ $row = mysql_fetch_array($deptid_result) or die(mysql_error());
+ echo $row['dep_id'];
+/* $deptid_result=mysql_fetch_assoc($deptid_query); */
+
+/* $deptid_result = mysql_query("SELECT dep_id FROM signup where signup.username='".$_SESSION['sess_username']."'" );
+    $depid=( $deptid_result ) ? mysql_fetch_assoc( $deptid_result ) : false; */
+
 
 ?>
 
-<form  action="Add_Academic_year_tables_Copy4details.php" method="POST" >
+
+
+<form  action="<?php echo $_SERVER['PHP_SELF']; ?>" method="POST" >
 <table id="simple-table" class="table  table-bordered table-hover">
-  <thead>
+											<thead>
+  <tr>
   
-  
-   
-    <tr width="600"> <div align="center">Faculty Name</div></tr>
-   
+
+   <th width="600"> <div align="center">Lecturer Name</div></th>
     <span class="green">
-	<!--<th  width="20"> <div ><a class="blue" href="#"><i class="ace-icon glyphicon glyphicon-ok"></i></a> </div></th>
+	<th  width="20"> <div ><a class="blue" href="#"><i class="ace-icon glyphicon glyphicon-ok"></i></a> </div></th>
     <th width="70"> <div align="center"><a class="green" href="#"><i class="ace-icon fa fa-pencil bigger-130"></i></a> </div></th></span>
     <th width="70"> <div align="center"><a class="red" href="#"><i class="ace-icon fa fa-trash-o bigger-120"></i></a> </div></th>
-	-->
+	
    
-  
+  </tr>
 
 <?php
 
 while($query_row =mysql_fetch_array($result))
-  {
-	   echo '<td><a href="faculty.php?prop_id='.$i.'">'.$query_row['fac_name'].'</a></td>';
+   {
+	 
+	   
+
+
+	  
+
+	   echo "<td>";
+	   echo '<input type="text" value ="'.$query_row['lec_name'].'" name ="na'.$i.'"/>';
+	   echo "</td>";
+		
+			echo "<td>";
+	    echo '<input type="checkbox" name="check-all'.$i.'" />';
+	    echo "</td>";
+	   
+ 
+       
+
+echo "<td>";
+	    
+		
+		 echo '<button class="btn btn-white btn-default btn-round" name ="updatebtn'.$i.'" >
+												<i class="ace-icon glyphicon glyphicon-pencil"></i>
+												
+											</button>';
+	    
+		
+		
+		
+			
+		if(isset($_POST['updatebtn'.$i.'']))
+	    {
+	    	if(isset($_POST['check-all'.$i.'']))
+	    	{
+
+               $r =$query_row['id'];
+           
+				$k =$_POST['na'.$i.''];
+
+                $query ="UPDATE lecturers SET  lec_name='$k'  WHERE id ='$r'";
+	   
+	             $result =mysql_query($query);
+	             if(!$result)
+	             {
+	             
+	             	 echo "<script type='text/javascript'>alert('Update failed');window.location = \"dept_hd_add_lecturer.php\"</script>";
+	             }
+	             else
+	             {
+	             	 echo "<script type='text/javascript'>alert('Update successfully');window.location = \"dept_hd_add_lecturer.php\"</script>";   	
+	             
+	                
+	             }
+
+	    	}
+	    	else
+	    	{
+	    	
+			echo "<script type='text/javascript'>alert('Select the check box');window.location = \"dept_hd_add_lecturer.php\"</script>";
+	    		
+	    	}
+	    	
+	    }		
+
+			
+	    echo "</td>";
+
+	    echo "<td>";
+	    
+		
+		 echo '<button class="btn btn-white btn-warning btn-bold" name ="deletebtn'.$i.'" >
+												<i class="ace-icon fa fa-trash-o bigger-120 orange"></i>
+												
+											</button>';
+	    
+	    if(isset($_POST['deletebtn'.$i.'']))
+	    {
+	    	if(isset($_POST['check-all'.$i.'']))
+	    	{
+				 $r =$query_row['id'];
+               
+             
+                 $query ="DELETE FROM lecturers WHERE id ='".$r."'";
+	   
+	             $result =mysql_query($query);
+	             if($result)
+	             {
+	                echo "<script type='text/javascript'>alert('Delete successfully');window.location = \"dept_hd_add_lecturer.php\"</script>";
+	             	
+	             }
+	             
+	             else
+	             {
+
+	             	echo "<script type='text/javascript'>alert('Delete is faild');window.location = \"dept_hd_add_lecturer.php\"</script>";
+	             
+	             }
+
+	    	}
+	    	else
+	    	{
+	    		
+	    		echo "<script type='text/javascript'>alert('Select the check box');window.location = \"dept_hd_add_lecturer.php\"</script>";
+	    	}
+	    
+	    }
+	    echo "</td>";	
+
+	    
+
 		echo "</tr>";
 		$i++;
+		 
+	  
+   
    }
    echo "<tr>";
+    
+    
+
+
+
+echo "<td>";
+    echo '<input type ="text" name = "txtln"/>';
+    echo "</td>";
+
+	echo "<td>";
+	
+	
+	echo'<input type="hidden" name="txtid" value="<?=$dep_id;?>" />';
+	
+    echo "</td>";
+    
+    echo "<td>";
+    /* echo '<input type ="submit" value ="Add" name ="addbtn"/>'; */
+	echo'<button class="btn btn-white btn-info btn-bold" type ="submit" name ="addbtn">
+												<i class="ace-icon glyphicon glyphicon-plus"></i>
+												
+											</button>';
+											
+											
+											
+											
+											
+
+    if(isset($_POST['addbtn']))
+    {
+    
+
+	$r =$_POST['txtln'];
+	$q =$row['dep_id'];
+	
+        if(!$r AND !$q )
+        {
+        	echo "<script type='text/javascript'>alert('Fill all details')</script>";
+        }
+        else
+        {
+
+        	/* $query ="INSERT INTO lecturers (lec_name,dept_id) VALUES ('$r' , '$q' )"; */
+			$query ="INSERT INTO `lecturers`(`lec_name`, `dept_id`) VALUES ('$r' , '$q')";	
+	        $result =mysql_query($query);
+	         if(!$result)
+	             {
+	          
+	             	echo "<script type='text/javascript'>alert('Insert is faild');window.location = \"dept_hd_add_lecturer.php\"</script>";
+	             	
+	             }
+	             else
+	             {
+
+	             	
+	             	echo "<script type='text/javascript'>alert('Insert successfully');window.location = \"dept_hd_add_lecturer.php\"</script>";
+	             	
+	             	
+	             }
+
+        }
+        
+       
+
+    }
+   
+    echo "</td>";
+
+
+
    echo "</tr>";
 ?>
 </thead>
@@ -302,7 +504,13 @@ while($query_row =mysql_fetch_array($result))
 
 
 </body>
-</html>
+			
+			
+			
+			
+			
+			
+			</html>
 
 
 										</div>

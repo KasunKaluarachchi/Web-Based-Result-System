@@ -152,14 +152,7 @@
 						<b class="arrow"></b>
 					</li>
 					
-					<li class="">
-						<a href="fact_hd_academic_year.php">
-							
-							<span class="menu-text">Add Accademic Year</span>
-						</a>
-
-						<b class="arrow"></b>
-					</li>
+					
 					
 					<li class="">
 						<a href="fact_add_student.php">
@@ -462,8 +455,8 @@ echo "<td>";
     
 
     echo "<td>";
-    echo '<input type ="hidden" name = "txtfn"/>';
-	echo "<select name='dep_name'>";
+   /*  echo '<input type ="hidden" name = "txtfn"/>'; */
+	echo '<input type ="hidden"/><select name="dep_name">';
 		while($row = mysql_fetch_array($result2))
 		{
 			echo "<option value='".$row['dep_name']."'>".$row['dep_name']."</option>";
@@ -475,8 +468,8 @@ echo "<td>";
     echo "</td>";
 	
 	 echo "<td>";
-    echo '<input type ="hidden" name = "txtfn"/>';
-	echo "<select name='lec_name'>";
+    /* echo '<input type ="hidden" name = "txtfn"/>'; */
+	echo '<input type ="hidden" /><select name="lec_name">';
 		while($row = mysql_fetch_array($result3))
 		{
 			echo "<option value='".$row['lec_name']."'>".$row['lec_name']."</option>";
@@ -500,44 +493,54 @@ echo "<td>";
     if(isset($_POST['addbtn']))
     {
     
-		$f =$_POST['txtfn'];
-     	 $uui ="ac_year_";
-		 $v="_";
-	     $yu =substr($f,0,4);
-	     $yu1 =substr($f,5,8);
-         $uu = $uui.$yu.$v.$yu1;
-	
-         $uu = $uui.$yu.$v.$yu1;
-	    
-        if(!$f)
-        {
-        	echo "<script type='text/javascript'>alert('Fill detail')</script>";
-        }
-        else
-        {
-		   $query ="INSERT INTO ac_year (year,table_name ) VALUES ('$f',' $uu' )";
-          $query1="CREATE TABLE  ".$uu." (S_Id INT(50) NOT NULL AUTO_INCREMENT, Reg_No varchar(50),Index_No varchar(50),Tittle varchar(50) ,Name varchar(50),PRIMARY KEY (S_Id))";
-		       
 		
+		$f =$_POST['lec_name'];
+		$n =$_POST['dep_name'];
+	
+		
+     	
+		 $query_dep = "SELECT dep_id FROM department WHERE dep_name ='$n'";
+		 $result_dep = mysql_query($query_dep);
+		  // $row2 = mysql_fetch_array($result_dep) or die(mysql_error());
+		  while($query_row=mysql_fetch_array($result_dep))
+		  {
+			  $row2=$query_row['dep_id'];
+		  }
+	     //echo $row2;
+	   
+          //echo $f;
+		  $query_id ="SELECT id FROM lecturer WHERE lec_name='$f'";
+		  $result_id = mysql_query($query_id)or die(mysql_errno);
+		   $row = mysql_fetch_array($result_id) or die(mysql_error());
+		 /*  while($query_row=mysql_fetch_array($result_id))
+		  {
+			  $row=$query_row['no'];
+		  }*/
+		  echo $row;
+		 
+		  
+		   
+		 
+		
+			$query_lec = "UPDATE department SET hd_id ='$row' WHERE dep_id='$row2'";
+			$result1 =mysql_query($query_lec);
         	
-		    $result1 =mysql_query($query1);
-	        $result =mysql_query($query);
-	         if(!$result)
+	         if(!$result1)
 	             {
 	          
-	             	echo "<script type='text/javascript'>alert('Insert is faild');window.location = \"Add_Academic_year_tables.php\"</script>";
+	             	echo "<script type='text/javascript'>alert('Insert is faild');window.location = \"fact_hd_assign_dean.php\"</script>";
 	             	
 	             }
 	             else
 	             {
 
 	             	
-	             	echo "<script type='text/javascript'>alert('Insert successfully');window.location = \"Add_Academic_year_tables.php\"</script>";
+	             	echo "<script type='text/javascript'>alert('Insert successfully');window.location = \"fact_hd_assign_dean.php\"</script>";
 	             	
 	             	
 	             }
 
-        }
+        
         
        
 

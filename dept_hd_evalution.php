@@ -131,7 +131,14 @@
 				<!-- /.sidebar-shortcuts -->
 
 				<ul class="nav nav-list">
-					
+					<li class="">
+						<a href="dept_hd_academic_year.php">
+							
+							<span class="menu-text">Add Accademic Year</span>
+						</a>
+
+						<b class="arrow"></b>
+					</li>
 					<li class="">
 						<a href="dept_hd_index.php">
 							
@@ -168,9 +175,19 @@
 					</li>
 					
 					<li class="">
-						<a href="dept_hd_ica.php">
+						<a href="dept_hd_custom1.php">
 							
-							<span class="menu-text">ICA Format</span><br>
+							<span class="menu-text">Default Evalution Method</span><br>
+							
+						</a>
+
+						<b class="arrow"></b>
+					</li>
+					
+					<li class="">
+						<a href="dept_hd_view_method.php">
+							
+							<span class="menu-text">View Evalution Method</span><br>
 							
 						</a>
 
@@ -244,7 +261,7 @@
 											<div class="pull-right tableTools-container"></div>
 										</div>
 										<div class="table-header">
-											View Faculties
+											View Object
 											
 										</div>
 											<br>
@@ -262,7 +279,7 @@
 <?php
 include('db_config.php');
 
-$query ="SELECT * FROM faculty_names";
+$query ="SELECT obj FROM evaluation_object WHERE evaluation_object.dep_id=(SELECT dep_id FROM signup where signup.username='".$_SESSION['sess_username']."')";
 $result=mysql_query($query);
 $i =0;
 
@@ -270,17 +287,16 @@ $i =0;
 
 <form  action="<?php echo $_SERVER['PHP_SELF']; ?>" method="POST" >
 <table id="simple-table" class="table  table-bordered table-hover">
-  <thead>
+											<thead>
   <tr>
   
-   
-    <tr width="600"> <div align="center">Faculty Name</div></tr>
+   <th width="600"> <div align="center">Evalution Object</div></th>
    
     <span class="green">
-	<!--<th  width="20"> <div ><a class="blue" href="#"><i class="ace-icon glyphicon glyphicon-ok"></i></a> </div></th>
+	<th  width="20"> <div ><a class="blue" href="#"><i class="ace-icon glyphicon glyphicon-ok"></i></a> </div></th>
     <th width="70"> <div align="center"><a class="green" href="#"><i class="ace-icon fa fa-pencil bigger-130"></i></a> </div></th></span>
     <th width="70"> <div align="center"><a class="red" href="#"><i class="ace-icon fa fa-trash-o bigger-120"></i></a> </div></th>
-	-->
+	
    
   </tr>
 
@@ -288,14 +304,184 @@ $i =0;
 
 while($query_row =mysql_fetch_array($result))
    {
-	
-	   echo "<tr>";
-	   echo '<input type="text" size ="155" value ="'.$query_row['fac_name'].'" readonly/>';
-	  
-	   echo "</tr>";
+	 
+	   
 
-   }
+
+	  
+
+	   echo "<td>";
+	   echo '<input type="text" value ="'.$query_row['obj'].'" name ="fn'.$i.'"/>';
+	   echo "</td>";
+		
+			echo "<td>";
+	    echo '<input type="checkbox" name="check-all'.$i.'" />';
+	    echo "</td>";
+	   
  
+       
+
+echo "<td>";
+	    
+		
+		 echo '<button class="btn btn-white btn-default btn-round" name ="updatebtn'.$i.'" >
+												<i class="ace-icon glyphicon glyphicon-pencil"></i>
+												
+											</button>';
+	    
+		
+		
+		
+			
+		if(isset($_POST['updatebtn'.$i.'']))
+	    {
+	    	if(isset($_POST['check-all'.$i.'']))
+	    	{
+
+               $r =$query_row['id'];
+               $f =$_POST['fn'.$i.''];
+        
+
+                $query ="UPDATE ac_year SET year ='$f'  WHERE id ='$r'";
+	   
+	             $result =mysql_query($query);
+	             if(!$result)
+	             {
+	             
+	             	 echo "<script type='text/javascript'>alert('Update failed');window.location = \"dept_hd_evalution.php\"</script>";
+	             }
+	             else
+	             {
+	             	 echo "<script type='text/javascript'>alert('Update successfully');window.location = \"dept_hd_evalution.php\"</script>";   	
+	             
+	                
+	             }
+
+	    	}
+	    	else
+	    	{
+	    	
+			echo "<script type='text/javascript'>alert('Select the check box');window.location = \"dept_hd_evalution.php\"</script>";
+	    		
+	    	}
+	    	
+	    }		
+
+			
+	    echo "</td>";
+
+	    echo "<td>";
+	    
+		
+		 echo '<button class="btn btn-white btn-warning btn-bold" name ="deletebtn'.$i.'" >
+												<i class="ace-icon fa fa-trash-o bigger-120 orange"></i>
+												
+											</button>';
+	    
+	    if(isset($_POST['deletebtn'.$i.'']))
+	    {
+	    	if(isset($_POST['check-all'.$i.'']))
+	    	{
+                $f =$_POST['fn'.$i.''];
+             
+                 $query ="DELETE FROM ac_year WHERE year ='".$f."'";
+	   
+	             $result =mysql_query($query);
+	             if($result)
+	             {
+	                echo "<script type='text/javascript'>alert('Delete successfully');window.location = \"dept_hd_evalution.php\"</script>";
+	             	
+	             }
+	             
+	             else
+	             {
+
+	             	echo "<script type='text/javascript'>alert('Delete is faild');window.location = \"dept_hd_evalution.php\"</script>";
+	             
+	             }
+
+	    	}
+	    	else
+	    	{
+	    		
+	    		echo "<script type='text/javascript'>alert('Select the check box')</script>";
+	    	}
+	    
+	    }
+	    echo "</td>";	
+
+	    
+
+		echo "</tr>";
+		$i++;
+		 
+	  
+   
+   }
+   echo "<tr>";
+    
+    
+
+    echo "<td>";
+    echo '<input type ="text" name = "txtfn"/>';
+    echo "</td>";
+
+
+
+    
+    echo "<td>";
+    /* echo '<input type ="submit" value ="Add" name ="addbtn"/>'; */
+	echo'<button class="btn btn-white btn-info btn-bold" type ="submit" name ="addbtn">
+												<i class="ace-icon glyphicon glyphicon-plus"></i>
+												
+											</button>';
+											
+											
+											
+											
+											
+
+    if(isset($_POST['addbtn']))
+    {
+    
+		$f =$_POST['txtfn'];
+
+        if(!$f   )
+        {
+        	echo "<script type='text/javascript'>alert('Fill all details')</script>";
+        }
+        else
+        {
+
+        	$query ="INSERT INTO ac_year (year ) VALUES ('$f' )";
+	   
+	        $result =mysql_query($query);
+	         if(!$result)
+	             {
+	          
+	             	echo "<script type='text/javascript'>alert('Insert is faild');window.location = \"dept_hd_evalution.php\"</script>";
+	             	
+	             }
+	             else
+	             {
+
+	             	
+	             	echo "<script type='text/javascript'>alert('Insert successfully');window.location = \"dept_hd_evalution.php\"</script>";
+	             	
+	             	
+	             }
+
+        }
+        
+       
+
+    }
+   
+    echo "</td>";
+
+
+
+   echo "</tr>";
 ?>
 </thead>
 </table>

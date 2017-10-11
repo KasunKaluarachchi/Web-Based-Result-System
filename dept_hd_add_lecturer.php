@@ -131,7 +131,14 @@
 				<!-- /.sidebar-shortcuts -->
 
 				<ul class="nav nav-list">
-					
+					<li class="">
+						<a href="dept_hd_academic_year.php">
+							
+							<span class="menu-text">Add Accademic Year</span>
+						</a>
+
+						<b class="arrow"></b>
+					</li>
 					<li class="">
 						<a href="dept_hd_index.php">
 							
@@ -168,9 +175,19 @@
 					</li>
 					
 					<li class="">
-						<a href="dept_hd_ica.php">
+						<a href="dept_hd_custom1.php">
 							
-							<span class="menu-text">ICA Format</span><br>
+							<span class="menu-text">Default Evalution Method</span><br>
+							
+						</a>
+
+						<b class="arrow"></b>
+					</li>
+					
+					<li class="">
+						<a href="dept_hd_view_method.php">
+							
+							<span class="menu-text">View Evalution Method</span><br>
 							
 						</a>
 
@@ -263,11 +280,32 @@
 <?php
 include('db_config.php');
 
-$query ="SELECT * FROM add_lecturer";
+$query ="SELECT lec_name FROM lecturers where lecturers.dept_id=(SELECT dep_id FROM signup where signup.username='".$_SESSION['sess_username']."')";
 $result=mysql_query($query);
 $i =0;
 
+/* $deptid_query="SELECT * FROM signup where signup.username='".$_SESSION['sess_username']."'"; */
+$user_dept=$_SESSION['sess_username'];
+
+$deptid_query="SELECT `dep_id` FROM `signup` WHERE `username`='$user_dept'";
+$deptid_result=mysql_query($deptid_query) or die(mysql_error()); 
+ $row = mysql_fetch_array($deptid_result) or die(mysql_error());
+ 
+ 
+ $facid_query="SELECT `fac_id` FROM `signup` WHERE `username`='$user_dept'";
+$facid_result=mysql_query($facid_query) or die(mysql_error()); 
+ $row2 = mysql_fetch_array($facid_result) or die(mysql_error());
+ 
+ 
+/* $deptid_result=mysql_fetch_assoc($deptid_query); */
+
+/* $deptid_result = mysql_query("SELECT dep_id FROM signup where signup.username='".$_SESSION['sess_username']."'" );
+    $depid=( $deptid_result ) ? mysql_fetch_assoc( $deptid_result ) : false; */
+
+
 ?>
+
+
 
 <form  action="<?php echo $_SERVER['PHP_SELF']; ?>" method="POST" >
 <table id="simple-table" class="table  table-bordered table-hover">
@@ -322,21 +360,21 @@ echo "<td>";
 	    	if(isset($_POST['check-all'.$i.'']))
 	    	{
 
-               $r =$query_row['no'];
+               $r =$query_row['id'];
            
-				$l =$_POST['na'.$i.''];
+				$k =$_POST['na'.$i.''];
 
-                $query ="UPDATE add_lecturer SET  lec_name='$l'  WHERE no ='$r'";
+                $query ="UPDATE lecturers SET  lec_name='$k'  WHERE id ='$r'";
 	   
 	             $result =mysql_query($query);
 	             if(!$result)
 	             {
 	             
-	             	 echo "<script type='text/javascript'>alert('Update failed');window.location = \"Add_Lecturer_details_tables.php\"</script>";
+	             	 echo "<script type='text/javascript'>alert('Update failed');window.location = \"dept_hd_add_lecturer.php\"</script>";
 	             }
 	             else
 	             {
-	             	 echo "<script type='text/javascript'>alert('Update successfully');window.location = \"Add_Lecturer_details_tables.php\"</script>";   	
+	             	 echo "<script type='text/javascript'>alert('Update successfully');window.location = \"dept_hd_add_lecturer.php\"</script>";   	
 	             
 	                
 	             }
@@ -345,7 +383,7 @@ echo "<td>";
 	    	else
 	    	{
 	    	
-			echo "<script type='text/javascript'>alert('Select the check box');window.location = \"Add_Lecturer_details_tables.php\"</script>";
+			echo "<script type='text/javascript'>alert('Select the check box');window.location = \"dept_hd_add_lecturer.php\"</script>";
 	    		
 	    	}
 	    	
@@ -366,22 +404,22 @@ echo "<td>";
 	    {
 	    	if(isset($_POST['check-all'.$i.'']))
 	    	{
-				 $r =$query_row['no'];
+				 $r =$query_row['id'];
                
              
-                 $query ="DELETE FROM add_lecturer WHERE no ='".$r."'";
+                 $query ="DELETE FROM lecturers WHERE id ='".$r."'";
 	   
 	             $result =mysql_query($query);
 	             if($result)
 	             {
-	                echo "<script type='text/javascript'>alert('Delete successfully');window.location = \"Add_Lecturer_details_tables.php\"</script>";
+	                echo "<script type='text/javascript'>alert('Delete successfully');window.location = \"dept_hd_add_lecturer.php\"</script>";
 	             	
 	             }
 	             
 	             else
 	             {
 
-	             	echo "<script type='text/javascript'>alert('Delete is faild');window.location = \"Add_Lecturer_details_tables.php\"</script>";
+	             	echo "<script type='text/javascript'>alert('Delete is faild');window.location = \"dept_hd_add_lecturer.php\"</script>";
 	             
 	             }
 
@@ -389,7 +427,7 @@ echo "<td>";
 	    	else
 	    	{
 	    		
-	    		echo "<script type='text/javascript'>alert('Select the check box');window.location = \"Add_Lecturer_details_tables.php\"</script>";
+	    		echo "<script type='text/javascript'>alert('Select the check box');window.location = \"dept_hd_add_lecturer.php\"</script>";
 	    	}
 	    
 	    }
@@ -413,6 +451,12 @@ echo "<td>";
     echo '<input type ="text" name = "txtln"/>';
     echo "</td>";
 
+	echo "<td>";
+	
+	
+	echo'<input type="hidden" name="txtid" value="<?=$dep_id;?>" />';
+	
+    echo "</td>";
     
     echo "<td>";
     /* echo '<input type ="submit" value ="Add" name ="addbtn"/>'; */
@@ -431,27 +475,32 @@ echo "<td>";
     
 
 	$r =$_POST['txtln'];
-        if(!$r  )
+	$q =$row['dep_id'];
+	$p =$row2['fac_id'];
+	
+        if(!$r AND !$q )
         {
         	echo "<script type='text/javascript'>alert('Fill all details')</script>";
         }
         else
         {
 
-        	$query ="INSERT INTO add_lecturer (lec_name) VALUES ('$r' )";
-	   
+        	/* $query ="INSERT INTO lecturers (lec_name,dept_id) VALUES ('$r' , '$q' )"; */
+			$query ="INSERT INTO `lecturers`(`lec_name`, `dept_id`,	`fact_id`) VALUES ('$r' , '$q','$p')";	
 	        $result =mysql_query($query);
+			
+			//$query2 = "INSERT INTO `signup`(`name`, `fac_id`, `dep_id`, `username`, `password`, `type`, `lec_id`) VALUES ('$r',[value-2],'$q',[value-4],[value-5],[value-6],[value-7]) ";
 	         if(!$result)
 	             {
 	          
-	             	echo "<script type='text/javascript'>alert('Insert is faild');window.location = \"Add_Lecturer_details_tables.php\"</script>";
+	             	echo "<script type='text/javascript'>alert('Insert is faild');window.location = \"dept_hd_add_lecturer.php\"</script>";
 	             	
 	             }
 	             else
 	             {
 
 	             	
-	             	echo "<script type='text/javascript'>alert('Insert successfully');window.location = \"Add_Lecturer_details_tables.php\"</script>";
+	             	echo "<script type='text/javascript'>alert('Insert successfully');window.location = \"dept_hd_add_lecturer.php\"</script>";
 	             	
 	             	
 	             }

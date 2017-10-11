@@ -1,3 +1,11 @@
+<?php 
+    session_start();
+    $role = $_SESSION['sess_userrole'];
+    if(!isset($_SESSION['sess_username']) && $role!="admin"){
+      header('Location: login.php?err=2');
+    }
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 	<head>
@@ -59,7 +67,12 @@
 				<div class="navbar-header pull-left">
 					<a href="index.html" class="navbar-brand">
 						<small>
-							Head | Department of Computer Science
+							<?php echo $_SESSION['sess_username'];
+							
+							 
+							?>
+							
+ | University Of Jaffna
 						</small>
 					</a>
 				</div>
@@ -228,7 +241,7 @@ $i =1;
 
 while($query_row =mysql_fetch_array($result))
   {
-	   echo '<td><a href="lec_ex_type.php?prop_id='.$i.'">'.$query_row['coursename'].'</a></td>';
+	   echo '<td><a href="lec_ex_type.php?prop_id='.$i.'?prop_id='.$varid_id.'">'.$query_row['coursename'].'</a></td>';
 		echo "</tr>";
 		$i++;
    }

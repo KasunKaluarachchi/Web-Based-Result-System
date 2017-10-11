@@ -131,7 +131,14 @@
 				<!-- /.sidebar-shortcuts -->
 
 				<ul class="nav nav-list">
-					
+					<li class="">
+						<a href="dept_hd_academic_year.php">
+							
+							<span class="menu-text">Add Accademic Year</span>
+						</a>
+
+						<b class="arrow"></b>
+					</li>
 					<li class="active">
 						<a href="dept_hd_index.php">
 							
@@ -168,9 +175,19 @@
 					</li>
 					
 					<li class="">
-						<a href="dept_hd_ica.php">
+						<a href="dept_hd_custom1.php">
 							
-							<span class="menu-text">ICA Format</span><br>
+							<span class="menu-text">Default Evalution Method</span><br>
+							
+						</a>
+
+						<b class="arrow"></b>
+					</li>
+					
+					<li class="">
+						<a href="dept_hd_view_method.php">
+							
+							<span class="menu-text">View Evalution Method</span><br>
 							
 						</a>
 
@@ -268,6 +285,13 @@ $query ="SELECT * FROM add_course where add_course.dep_id=(SELECT dep_id FROM si
 $result=mysql_query($query);
 $i =0;
 
+
+$deptid_query="SELECT `dep_id` FROM `signup` WHERE `username`='dept_head'";
+$deptid_result=mysql_query($deptid_query) or die(mysql_error()); 
+ $row = mysql_fetch_array($deptid_result) or die(mysql_error());
+
+
+
 ?>
 
 <form  action="<?php echo $_SERVER['PHP_SELF']; ?>" method="POST" >
@@ -276,7 +300,8 @@ $i =0;
   <tr>
   
    <th width="60"> <div align="center">Course ID</div></th>
-   <th width="6000"> <div align="center">Course Name</div></th>
+   <th width="5000"> <div align="center">Course Name</div></th>
+   <th width="6"> <div align="center">Number of question</div></th>
    
     <span class="green">
 	<th  width="20"> <div ><a class="blue" href="#"><i class="ace-icon glyphicon glyphicon-ok"></i></a> </div></th>
@@ -297,11 +322,15 @@ while($query_row =mysql_fetch_array($result))
 	  
 
 	   echo "<td>";
-	   echo '<input type="text"  value ="'.$query_row['courseid'].'" name ="fn'.$i.'"/>';
+	   echo '<input type="text"  value ="'.$query_row['couseid'].'" name ="fn'.$i.'"/>';
 	   echo "</td>";
 	   
 	    echo "<td>";
 	   echo '<input type="text" size="60" value ="'.$query_row['coursename'].'" name ="fn'.$i.'"/>';
+	   echo "</td>";
+	   
+	    echo "<td>";
+	   echo '<input type="number" size="6" value ="'.$query_row['qstn_no'].'" name ="fn'.$i.'"/>';
 	   echo "</td>";
 		
 			echo "<td>";
@@ -418,10 +447,19 @@ echo "<td>";
     echo "</td>";
 	
 	echo "<td>";
-    echo '<input type ="text" name = "txtfn"/>';
+    echo '<input type ="text" name = "txtln"/>';
+    echo "</td>";
+	
+	echo "<td>";
+    echo '<input type ="text" name = "txtqn"/>';
     echo "</td>";
 
-
+/* echo "<td>";
+	
+	
+	echo'<input type="hidden" name="txtid" value="$row['dep_id']" />';
+	
+    echo "</td>"; */
 
     
     echo "<td>";
@@ -440,28 +478,45 @@ echo "<td>";
     {
     
 		$f =$_POST['txtfn'];
-
-        if(!$f   )
+		$p =$_POST['txtln'];
+		$q =$row['dep_id'];
+		
+		$r =$_POST['txtqn'];
+		
+        if(!$f)
         {
         	echo "<script type='text/javascript'>alert('Fill all details')</script>";
         }
         else
         {
 
-        	$query ="INSERT INTO faculty (fac_name ) VALUES ('$f' )";
-	   
+        
+			$query = "INSERT INTO `add_course`( `couseid`, `coursename`, `dep_id`, `qstn_no`) VALUES ('$f','$p','$q','$r' )";
+			$query2 = "CREATE TABLE $f (st_index varchar(10) NOT NULL,
+										ac_year varchar(10) NOT NULL,
+										  q1 varchar(5) NOT NULL
+										 )";
+										 
+							 
 	        $result =mysql_query($query);
+			 $result2 =mysql_query($query2);
+			 
+			 for($i = 2; $i<=$r; $i++)
+			 {
+			 $query3 = " ALTER TABLE $f	ADD q$i varchar(5)"	;		
+			 $result3 =mysql_query($query3);
+			 }
 	         if(!$result)
 	             {
 	          
-	             	echo "<script type='text/javascript'>alert('Insert is faild');window.location = \"admin_index.php\"</script>";
+	             	echo "<script type='text/javascript'>alert('Insert is faild');window.location = \"dept_hd_index.php\"</script>"; 
 	             	
 	             }
 	             else
 	             {
 
 	             	
-	             	echo "<script type='text/javascript'>alert('Insert successfully');window.location = \"admin_index.php\"</script>";
+	             	echo "<script type='text/javascript'>alert('Insert successfully');window.location = \"dept_hd_index.php\"</script>";
 	             	
 	             	
 	             }

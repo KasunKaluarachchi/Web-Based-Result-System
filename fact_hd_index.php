@@ -152,14 +152,7 @@
 						<b class="arrow"></b>
 					</li>
 					
-					<li class="">
-						<a href="fact_hd_academic_year.php">
-							
-							<span class="menu-text">Add Accademic Year</span>
-						</a>
-
-						<b class="arrow"></b>
-					</li>
+					
 					
 					<li class="">
 						<a href="fact_add_student.php">
@@ -290,6 +283,10 @@ $i =0;
 $query_depid="SELECT fac_id FROM faculty_admin where fac_admin_name='".$_SESSION['sess_username']."'";
 $result_depid=mysql_query($query_depid);
 $name=mysql_fetch_object($result_depid);
+
+$facid_query="SELECT fac_id FROM signup WHERE signup.fac_id=(SELECT fac_id FROM faculty_admin where faculty_admin.fac_admin_name='".$_SESSION['sess_username']."')";
+$facid_result=mysql_query($facid_query) or die(mysql_error()); 
+ $row = mysql_fetch_array($facid_result) or die(mysql_error());
 ?>
 
 
@@ -463,7 +460,7 @@ echo "<td>";
     {
     
 		$f =$_POST['txtfn'];
-		$f2 =$_POST['txtfn2'];
+		$q =$row['fac_id'];
 
         if(!$f )
         {
@@ -472,7 +469,7 @@ echo "<td>";
         else
         {
 
-        	$query ="INSERT INTO department (dep_name,fac_id ) VALUES ('$f','$f2' )";
+        	$query ="INSERT INTO department (dep_name,fac_id ) VALUES ('$f','$q' )";
 	   
 	        $result =mysql_query($query);
 	         if(!$result)

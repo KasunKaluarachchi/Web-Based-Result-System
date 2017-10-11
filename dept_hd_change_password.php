@@ -131,7 +131,14 @@
 				<!-- /.sidebar-shortcuts -->
 
 				<ul class="nav nav-list">
-					
+					<li class="">
+						<a href="dept_hd_academic_year.php">
+							
+							<span class="menu-text">Add Accademic Year</span>
+						</a>
+
+						<b class="arrow"></b>
+					</li>
 					<li class="">
 						<a href="dept_hd_index.php">
 							
@@ -168,9 +175,19 @@
 					</li>
 					
 					<li class="">
-						<a href="dept_hd_ica.php">
+						<a href="dept_hd_custom1.php">
 							
-							<span class="menu-text">ICA Format</span><br>
+							<span class="menu-text">Default Evalution Method</span><br>
+							
+						</a>
+
+						<b class="arrow"></b>
+					</li>
+					
+					<li class="">
+						<a href="dept_hd_view_method.php">
+							
+							<span class="menu-text">View Evalution Method</span><br>
 							
 						</a>
 

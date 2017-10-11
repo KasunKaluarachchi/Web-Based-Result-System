@@ -152,14 +152,7 @@
 						<b class="arrow"></b>
 					</li>
 					
-					<li class="">
-						<a href="fact_hd_academic_year.php">
-							
-							<span class="menu-text">Add Accademic Year</span>
-						</a>
-
-						<b class="arrow"></b>
-					</li>
+					
 					
 					<li class="active">
 						<a href="fact_add_student.php">

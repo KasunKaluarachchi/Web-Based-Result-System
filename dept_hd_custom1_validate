@@ -1,0 +1,46 @@
+<?php
+
+
+
+
+$l1 = $_POST['lbb1'];
+
+
+	if($l1=="")
+	{
+		
+	echo "<script type='text/javascript'>alert('Select method');window.location = \"dept_hd_custom1.php\"</script>";
+		
+	}
+	else
+	{
+		echo "<script type='text/javascript'>alert('Successful');window.location = \"dept_hd_custom2.php\"</script>";
+		
+		
+	}
+
+
+
+
+/* 	
+	if($x=="")
+	{
+		
+	echo "<script type='text/javascript'>alert('Empty field');window.location = \"dept_hd_custom1.php\"</script>";
+		
+	}
+	if($n>8||$n<=0)
+	{
+		echo "<script type='text/javascript'>alert('Objects range must 1-8');window.location = \"dept_hd_custom1.php\"</script>";
+		
+		
+	}
+	if($n<=8||$n>0)
+	{
+		echo "<script type='text/javascript'>alert('Successful');window.location = \"dept_hd_custom2.php?prop_id='.$n.'\"</script>";
+		
+		
+	}
+ */
+
+?>

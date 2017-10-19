@@ -53,7 +53,7 @@
 	</head>
 
 	<body class="no-skin">
-		<div id="navbar" class="navbar navbar-default          ace-save-state">
+		<div id="navbar" class="navbar navbar-default ace-save-state">
 			<div class="navbar-container ace-save-state" id="navbar-container">
 				<button type="button" class="navbar-toggle menu-toggler pull-left" id="menu-toggler" data-target="#sidebar">
 					<span class="sr-only">Toggle sidebar</span>
@@ -66,7 +66,7 @@
 				</button>
 
 				<div class="navbar-header pull-left">
-					<a href="admin_index.php" class="navbar-brand">
+					<a href="dept_hd_academic_year.php" class="navbar-brand">
 						<small>
 							<?php echo $_SESSION['sess_username'];?>
  | University Of Jaffna
@@ -95,15 +95,8 @@
 							<ul class="user-menu dropdown-menu-right dropdown-menu dropdown-yellow dropdown-caret dropdown-close">
 								
 
-								<li>
-									<a href="profile.html">
-										<i class="ace-icon fa fa-user"></i>
-										Profile
-									</a>
-								</li>
-
-								<li class="divider"></li>
-
+							
+								
 								<li>
 									<a href="logout.php">
 										<i class="ace-icon fa fa-power-off"></i>
@@ -134,7 +127,7 @@
 					<li class="">
 						<a href="dept_hd_academic_year.php">
 							
-							<span class="menu-text">Add Accademic Year</span>
+							<span class="menu-text">Add Academic Year</span>
 						</a>
 
 						<b class="arrow"></b>
@@ -177,13 +170,12 @@
 					<li class="">
 						<a href="dept_hd_custom1.php">
 							
-							<span class="menu-text">Default Evalution Method</span><br>
+							<span class="menu-text">Custom Evalution Method</span><br>
 							
 						</a>
 
 						<b class="arrow"></b>
 					</li>
-					
 					<li class="">
 						<a href="dept_hd_view_method.php">
 							
@@ -193,12 +185,6 @@
 
 						<b class="arrow"></b>
 					</li>
-					
-					<br>
-					
-					
-					
-					
 					<li class="">
 						<a href="dept_hd_change_password.php">
 						
@@ -225,19 +211,12 @@
 							
 						</ul><!-- /.breadcrumb -->
 
-						<div class="nav-search" id="nav-search">
-							<form class="form-search">
-								<span class="input-icon">
-									<input type="text" placeholder="Search ..." class="nav-search-input" id="nav-search-input" autocomplete="off" />
-									<i class="ace-icon fa fa-search nav-search-icon"></i>
-								</span>
-							</form>
-						</div><!-- /.nav-search -->
+					
 					</div>
 
 					<div class="page-content">
 						<!-- /.ace-settings-container -->
-<div class="page-header">
+                          <div class="page-header">
 							<h1>
 								Add Courses
 								<small>
@@ -278,8 +257,13 @@
 <br>
 <?php
 include('db_config.php');
+$q1 ="SELECT dep_id FROM signup where username='".$_SESSION['sess_username']."'";
+$re =mysql_query($q1);
+$query_row =mysql_fetch_array($re);
+//echo $query_row['dep_id'];
 
-$query ="SELECT * FROM add_course where add_course.dep_id=(SELECT dep_id FROM signup where signup.username='".$_SESSION['sess_username']."')";
+
+$query ="SELECT * FROM add_course where dep_id='".$query_row['dep_id']."'";
 
 
 $result=mysql_query($query);
@@ -301,7 +285,7 @@ $deptid_result=mysql_query($deptid_query) or die(mysql_error());
   
    <th width="60"> <div align="center">Course ID</div></th>
    <th width="5000"> <div align="center">Course Name</div></th>
-   <th width="6"> <div align="center">Number of question</div></th>
+   
    
     <span class="green">
 	<th  width="20"> <div ><a class="blue" href="#"><i class="ace-icon glyphicon glyphicon-ok"></i></a> </div></th>
@@ -316,24 +300,17 @@ $deptid_result=mysql_query($deptid_query) or die(mysql_error());
 while($query_row =mysql_fetch_array($result))
    {
 	 
-	   
-
-
-	  
-
 	   echo "<td>";
 	   echo '<input type="text"  value ="'.$query_row['couseid'].'" name ="fn'.$i.'"/>';
 	   echo "</td>";
 	   
 	    echo "<td>";
-	   echo '<input type="text" size="60" value ="'.$query_row['coursename'].'" name ="fn'.$i.'"/>';
+	   echo '<input type="text" size="60" value ="'.$query_row['coursename'].'" name ="fn1'.$i.'"/>';
 	   echo "</td>";
 	   
-	    echo "<td>";
-	   echo '<input type="number" size="6" value ="'.$query_row['qstn_no'].'" name ="fn'.$i.'"/>';
-	   echo "</td>";
+	    
 		
-			echo "<td>";
+		echo "<td>";
 	    echo '<input type="checkbox" name="check-all'.$i.'" />';
 	    echo "</td>";
 	   
@@ -357,11 +334,12 @@ echo "<td>";
 	    	if(isset($_POST['check-all'.$i.'']))
 	    	{
 
-               $r =$query_row['coursename'];
-               $f =$_POST['fn'.$i.''];
-        
+               $id =$query_row['id'];
+               $r =$_POST['fn'.$i.''];
+               $f =$_POST['fn1'.$i.''];
 
-                $query ="UPDATE add_course SET coursename ='$f'  WHERE courseid ='$r'";
+                
+                $query ="UPDATE add_course SET 	coursename ='$f',couseid ='$r' WHERE id ='$id'";
 	   
 	             $result =mysql_query($query);
 	             if(!$result)
@@ -401,22 +379,26 @@ echo "<td>";
 	    {
 	    	if(isset($_POST['check-all'.$i.'']))
 	    	{
-                $f =$_POST['fn'.$i.''];
+                $f =$query_row['id'];
+                $r =$_POST['fn'.$i.''];
              
-                 $query ="DELETE FROM faculty WHERE fac_name ='".$f."'";
-	   
+                 $query ="DELETE FROM add_course WHERE id='".$f."'";
+                 $query_dr ="DROP TABLE  $r";
+
+	             $result_dr =mysql_query($query_dr);
+
 	             $result =mysql_query($query);
-	             if($result)
+	             if($result &&  $result_dr)
 	             {
 					 
-					echo "<script type='text/javascript'>alert('Delete successfully');window.location = \"admin_index.php\"</script>";
+					echo "<script type='text/javascript'>alert('Delete successfully');window.location = \"dept_hd_index.php\"</script>";
 	             	
 	             }
 	             
 	             else
 	             {
 					
-	             	echo "<script type='text/javascript'>alert('Delete is faild');window.location = \"admin_index.php\"</script>";
+	             	echo "<script type='text/javascript'>alert('Delete is faild');window.location = \"dept_hd_index.php\"</script>";
 	             
 	             }
 
@@ -447,12 +429,10 @@ echo "<td>";
     echo "</td>";
 	
 	echo "<td>";
-    echo '<input type ="text" name = "txtln"/>';
+    echo '<input type ="text" size="60" name = "txtln"/>';
     echo "</td>";
 	
-	echo "<td>";
-    echo '<input type ="text" name = "txtqn"/>';
-    echo "</td>";
+	
 
 /* echo "<td>";
 	
@@ -481,7 +461,7 @@ echo "<td>";
 		$p =$_POST['txtln'];
 		$q =$row['dep_id'];
 		
-		$r =$_POST['txtqn'];
+		$r =6;
 		
         if(!$f)
         {
@@ -501,11 +481,14 @@ echo "<td>";
 	        $result =mysql_query($query);
 			 $result2 =mysql_query($query2);
 			 
-			 for($i = 2; $i<=$r; $i++)
+			 for($i = 2; $i<=6; $i++)
 			 {
 			 $query3 = " ALTER TABLE $f	ADD q$i varchar(5)"	;		
 			 $result3 =mysql_query($query3);
 			 }
+
+			 $query4 = "ALTER TABLE $f	ADD total double(5,2)";		
+			 $result4 =mysql_query($query4);
 	         if(!$result)
 	             {
 	          

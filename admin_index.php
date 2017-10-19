@@ -3,6 +3,9 @@
     $role = $_SESSION['sess_userrole'];
     if(!isset($_SESSION['sess_username']) && $role!="admin"){
       header('Location: login.php?err=2');
+
+
+
     }
 ?>
 <!DOCTYPE html>
@@ -10,7 +13,7 @@
 	<head>
 		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
 		<meta charset="utf-8" />
-		<title>Tables - Ace Admin</title>
+		<title>ERS</title>
 
 		<meta name="description" content="Static &amp; Dynamic Tables" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
@@ -70,7 +73,7 @@
 			
 			
 			
-			echo "University Admin";
+			echo $_SESSION['sess_userrole'];
 		
 		
 		
@@ -104,15 +107,7 @@
 							<ul class="user-menu dropdown-menu-right dropdown-menu dropdown-yellow dropdown-caret dropdown-close">
 								
 
-								<li>
-									<a href="profile.html">
-										<i class="ace-icon fa fa-user"></i>
-										Profile
-									</a>
-								</li>
-
-								<li class="divider"></li>
-
+								
 								<li>
 									<a href="logout.php">
 										<i class="ace-icon fa fa-power-off"></i>
@@ -174,10 +169,7 @@
 						</a>
 
 						<b class="arrow"></b>
-					</li><br>
-					
-					
-					
+					</li>
 					
 					<li class="">
 						<a href="admin_change_password.php">
@@ -205,14 +197,7 @@
 							
 						</ul><!-- /.breadcrumb -->
 
-						<div class="nav-search" id="nav-search">
-							<form class="form-search">
-								<span class="input-icon">
-									<input type="text" placeholder="Search ..." class="nav-search-input" id="nav-search-input" autocomplete="off" />
-									<i class="ace-icon fa fa-search nav-search-icon"></i>
-								</span>
-							</form>
-						</div><!-- /.nav-search -->
+						<!-- /.nav-search -->
 					</div>
 
 					<div class="page-content">
@@ -284,17 +269,11 @@ $i =0;
 
 while($query_row =mysql_fetch_array($result))
    {
-	 
-	   
-
-
-	  
-
 	   echo "<td>";
 	   echo '<input type="text" size =60 value ="'.$query_row['fac_name'].'" name ="fn'.$i.'"/>';
 	   echo "</td>";
 		
-			echo "<td>";
+		echo "<td>";
 	    echo '<input type="checkbox" name="check-all'.$i.'" />';
 	    echo "</td>";
 	   
@@ -426,17 +405,19 @@ echo "<td>";
     {
     
 		$f =$_POST['txtfn'];
+		//$f2 =$_SESSION['fac_id'];
+		//echo $f2;
 
-        if(!$f   )
+        if(!$f)
         {
         	echo "<script type='text/javascript'>alert('Fill all details')</script>";
         }
         else
         {
 
-        	$query ="INSERT INTO faculty (fac_name ) VALUES ('$f' )";
+        	$query ="INSERT INTO faculty (fac_name) VALUES ('$f')";
 	   
-	        $result =mysql_query($query);
+	          $result =mysql_query($query);
 	         if(!$result)
 	             {
 	          
@@ -452,7 +433,7 @@ echo "<td>";
 	             	
 	             }
 
-        }
+          }
         
        
 

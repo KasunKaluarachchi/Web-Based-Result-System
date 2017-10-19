@@ -3,10 +3,9 @@
     $role = $_SESSION['sess_userrole'];
     if(!isset($_SESSION['sess_username']) && $role!="admin"){
       header('Location: login.php?err=2');
+
     }
 ?>
-
-
 <!DOCTYPE html>
 <html lang="en">
 	<head>
@@ -66,7 +65,7 @@
 				</button>
 
 				<div class="navbar-header pull-left">
-					<a href="admin_index.php" class="navbar-brand">
+					<a href="fact_hd_index.php" class="navbar-brand">
 						<small>
 							<?php echo $_SESSION['sess_username'];
 							/* $query_fac = "SELECT fac_name FROM faculty where faculty.fac_id=(SELECT fac_id FROM faculty_admin where faculty_admin.fac_admin_name='".$_SESSION['sess_username']."')"; */
@@ -106,14 +105,7 @@
 							<ul class="user-menu dropdown-menu-right dropdown-menu dropdown-yellow dropdown-caret dropdown-close">
 								
 
-								<li>
-									<a href="profile.html">
-										<i class="ace-icon fa fa-user"></i>
-										Profile
-									</a>
-								</li>
-
-								<li class="divider"></li>
+								
 
 								<li>
 									<a href="logout.php">
@@ -153,28 +145,10 @@
 					</li>
 					
 					
-					
-					<li class="">
-						<a href="fact_add_student.php">
-							
-							<span class="menu-text">Add Student Details</span>
-						</a>
-
-						<b class="arrow"></b>
-					</li>
 					<li class="">
 						<a href="fact_hd_assign_dean.php">
 							
 							<span class="menu-text">Assign Department Head</span>
-						</a>
-
-						<b class="arrow"></b>
-					</li>
-					<li class="">
-						<a href="fact_hd_intfact_course.php">
-							
-							<span class="menu-text">Add Inter-Faculty Course</span><br>
-							
 						</a>
 
 						<b class="arrow"></b>
@@ -185,9 +159,9 @@
 						
 							<span class="menu-text">Assign Lecturer</span>
 
-							
 						</a>
-					</li><br>
+						<b class="arrow"></b>
+					</li>
 					
 					
 					<li class="">
@@ -216,24 +190,17 @@
 							
 						</ul><!-- /.breadcrumb -->
 
-						<div class="nav-search" id="nav-search">
-							<form class="form-search">
-								<span class="input-icon">
-									<input type="text" placeholder="Search ..." class="nav-search-input" id="nav-search-input" autocomplete="off" />
-									<i class="ace-icon fa fa-search nav-search-icon"></i>
-								</span>
-							</form>
-						</div><!-- /.nav-search -->
+						<!-- /.nav-search -->
 					</div>
 
 					<div class="page-content">
 						<!-- /.ace-settings-container -->
 <div class="page-header">
 							<h1>
-								Add Dean
+								Assign Lecturer
 								<small>
 									<i class="ace-icon fa fa-angle-double-right"></i>
-									Add details
+								
 								</small>
 							</h1>
 						</div>
@@ -252,12 +219,12 @@
 											<div class="pull-right tableTools-container"></div>
 										</div>
 										<div class="table-header">
-											Add Dean details
+											Assign Lecturer details
 											
 										</div>
 											<br>
-											* Please put a tick mark before doing edit or delete operations.
-										<!-- div.table-responsive -->
+											<!--* Please put a tick mark before doing edit or delete operations.
+										 div.table-responsive -->
 
 										<!-- div.dataTables_borderWrap -->
 										<div align="center"  >
@@ -269,19 +236,32 @@
 <br>
 <?php
 include('db_config.php');
+$t =$_SESSION['sess_username'];
+//echo $t;
+$role = $_SESSION['sess_userrole'];
+//echo $role;
+$query ="SELECT fac_id FROM signup WHERE username='$t'";
+$result =mysql_query($query);
+ while($query_row =mysql_fetch_array($result))
+              {
+                   $fac_id =$query_row['fac_id'];
+              }	
+//echo $fac_id;
+
+ //$query1 ="SELECT lec_name,	dept_id FROM lecturers where fact_id='$fac_id'";
+ //$result1=mysql_query($query1);
+ $query ="SELECT lec_name,	dep_name FROM lecturers INNER JOIN department ON lecturers.dept_id =department.	dep_id where fac_id='$fac_id'";
+ $result=mysql_query($query);
+ //$query ="SELECT dep_name FROM department where fac_id='$fac_id'";
+ //$result=mysql_query($query);
+ $i =0;
+
 
 /* $query ="SELECT * FROM lecturers where lecturers.fact_id=(SELECT fac_id FROM faculty_admin where faculty_admin.fac_admin_name='".$_SESSION['sess_username']."')";
 
 
  */
-$query ="SELECT lecturers.lec_name AS lecr_name,department.dep_name AS deptm_name FROM lecturers JOIN department ON lecturers.fact_id=department.fac_id where 
-				lecturers.dept_id=department.dep_id AND
- lecturers.fact_id=(SELECT fac_id FROM faculty_admin where faculty_admin.fac_admin_name='".$_SESSION['sess_username']."')";
 
-$result=mysql_query($query);
-$i =0;
-$query_drop = "SELECT dep_name FROM department where department.fac_id=(SELECT fac_id FROM faculty_admin where faculty_admin.fac_admin_name='".$_SESSION['sess_username']."')";
-$result2=mysql_query($query_drop);
 ?>
 
 <form  action="<?php echo $_SERVER['PHP_SELF']; ?>" method="POST" >
@@ -289,161 +269,34 @@ $result2=mysql_query($query_drop);
 											<thead>
   <tr>
   
-   <th width="600"> <div align="center">Lecturer Name</div></th>
-   <th width="600"> <div align="center">Department Name</div></th>
-    
-   
-    <span class="green">
-	<th  width="20"> <div ><a class="blue" href="#"><i class="ace-icon glyphicon glyphicon-ok"></i></a> </div></th>
-    <th width="70"> <div align="center"><a class="green" href="#"><i class="ace-icon fa fa-pencil bigger-130"></i></a> </div></th></span>
-    <th width="70"> <div align="center"><a class="red" href="#"><i class="ace-icon fa fa-trash-o bigger-120"></i></a> </div></th>
-	
-   
+   <th width="150"> <div align="center">Lecturer Name</div></th>
+   <th width="200"> <div align="center">Department Name</div></th>
+   <th width="50"> <div align="center">Add</div></th>
+ 
+   <!-- <samp>
+    <th width="7"> <div align="center"><a class="green" href="#"><i class="ace-icon glyphicon glyphicon-plus"></i></a> </div></th>
+    </samp>
+  -->
   </tr>
 
 <?php
 
-while($query_row =mysql_fetch_array($result))
+   while($query_row =mysql_fetch_array($result))
    {
 	 
+	   echo "<td>";
+	   echo '<input type="text" size="50" value ="'.$query_row['lec_name'].'" name ="fn'.$i.'"/>';
+	   echo "</td>";
 	   
-
-
-	  
+	   echo "<td>";
+	   echo '<input type="text" size="50" value ="'.$query_row['dep_name'].'" name ="fn'.$i.'"/>';
+	   echo "</td>";
 
 	   echo "<td>";
-	   echo '<input type="text" size="60" value ="'.$query_row['lecr_name'].'" name ="fn'.$i.'"/>';
+	   echo '<input type="hidden" name="check-all'.$i.'" />';
 	   echo "</td>";
 	   
-	    echo "<td>";
-	   echo '<input type="text" size="60" value ="'.$query_row['deptm_name'].'" name ="fn'.$i.'"/>';
-	   echo "</td>";
-	   
-		
-			echo "<td>";
-	    echo '<input type="checkbox" name="check-all'.$i.'" />';
-	    echo "</td>";
-	   
- 
-       
-
-echo "<td>";
-	    
-		
-		 echo '<button class="btn btn-white btn-default btn-round" name ="updatebtn'.$i.'" >
-												<i class="ace-icon glyphicon glyphicon-pencil"></i>
-												
-											</button>';
-	    
-		
-		
-		
-			
-		if(isset($_POST['updatebtn'.$i.'']))
-	    {
-	    	if(isset($_POST['check-all'.$i.'']))
-	    	{
-
-               $r =$query_row['id'];
-               $f =$_POST['fn'.$i.''];
-    
-		        $query1="SELECT table_name FROM ac_year WHERE id='$r'";
-						$result1 =mysql_query($query1) ;
-						$p =mysql_fetch_object($result1);
-                       echo $p;
-		
-		  
-		  
-                $query ="UPDATE ac_year SET year ='$f'  WHERE id ='$r'";
-	   
-	             $result =mysql_query($query);
-	             if(!$result)
-	             {
-	             
-	             	 echo "<script type='text/javascript'>alert('Update failed');window.location = \"Add_Academic_year_tables.php\"</script>";
-	             }
-	             else
-	             {
-					  
-				
-							//$p =$query_row['table_name'];
-						
-		
-						$query2="DROP TABLE ".$p."";
-						$result2=mysql_query($query2);
-						
-						$uui ="ac_year_";
-						 $v="_";
-						 $yu =substr($f,0,4);
-						 $yu1 =substr($f,5,8);
-						 $uu = $uui.$yu.$v.$yu1;
-					
-						 $uu = $uui.$yu.$v.$yu1;
-						 
-						   $query1="CREATE TABLE  ".$uu." (S_Id INT(50) NOT NULL AUTO_INCREMENT, Reg_No varchar(50),Index_No varchar(50),Tittle varchar(50) ,Name varchar(50),PRIMARY KEY (S_Id))";
-							$result1 =mysql_query($query1);
-						 
-	             	 echo "<script type='text/javascript'>alert('Update successfully');window.location = \"Add_Academic_year_tables.php\"</script>";   	
-	             
-	                
-	             }
-
-	    	}
-	    	else
-	    	{
-	    	
-			echo "<script type='text/javascript'>alert('Select the check box');window.location = \"Add_Academic_year_tables.php\"</script>";
-	    		
-	    	}
-	    	
-	    }		
-
-			
-	    echo "</td>";
-
-	    echo "<td>";
-	    
-		
-		 echo '<button class="btn btn-white btn-warning btn-bold" name ="deletebtn'.$i.'" >
-												<i class="ace-icon fa fa-trash-o bigger-120 orange"></i>
-												
-											</button>';
-	    
-	    if(isset($_POST['deletebtn'.$i.'']))
-	    {
-	    	if(isset($_POST['check-all'.$i.'']))
-	    	{
-                $f =$_POST['fn'.$i.''];
-             
-                 $query ="DELETE FROM ac_year WHERE year ='".$f."'";
-	   
-	             $result =mysql_query($query);
-	             if($result)
-	             {
-	                echo "<script type='text/javascript'>alert('Delete successfully');window.location = \"Add_Academic_year_tables.php\"</script>";
-	             	
-	             }
-	             
-	             else
-	             {
-
-	             	echo "<script type='text/javascript'>alert('Delete is faild');window.location = \"Add_Academic_year_tables.php\"</script>";
-	             
-	             }
-
-	    	}
-	    	else
-	    	{
-	    		
-	    		echo "<script type='text/javascript'>alert('Select the check box')</script>";
-	    	}
-	    
-	    }
-	    echo "</td>";	
-
-	    
-
-		echo "</tr>";
+       echo "</tr>";
 		$i++;
 		 
 	  
@@ -452,14 +305,33 @@ echo "<td>";
    echo "<tr>";
     
     
+   echo "<td>";
+   $query1 ="SELECT lec_name FROM lecturers where fact_id='$fac_id'";
+   $result1=mysql_query($query1);
+    echo '<input type ="hidden" /><select name ="txtlc" >';
+   
+   while($query_row =mysql_fetch_array($result1))
+   {
+	   echo"<option>".$query_row['lec_name']."</option>";
+   }
+   
+   echo'</select>';
+   echo "</td>";
+   
+  
 
-    echo "<td>";
-    echo '<input type ="text" name = "txtfn"/>';
-    echo "</td>";
-	
-	 echo "<td>";
-    echo '<input type ="text" name = "txtfn"/>';
-    echo "</td>";
+   echo "<td>";
+   $query ="SELECT dep_name FROM department where fac_id='$fac_id'";
+   $result=mysql_query($query);
+    echo '<input type ="hidden" /><select name ="txtde">';
+   
+   while($query_row =mysql_fetch_array($result))
+   {
+	   echo"<option>".$query_row['dep_name']."</option>";
+   }
+   
+   echo'</select>';
+   echo "</td>";
 	
 	 
 
@@ -468,7 +340,7 @@ echo "<td>";
     
     echo "<td>";
     /* echo '<input type ="submit" value ="Add" name ="addbtn"/>'; */
-	echo'<button class="btn btn-white btn-info btn-bold" type ="submit" name ="addbtn">
+	echo'<button class="btn btn-white btn-info btn-bold" type ="submit" name ="addbtn" size ="10">
 												<i class="ace-icon glyphicon glyphicon-plus"></i>
 												
 											</button>';
@@ -476,39 +348,36 @@ echo "<td>";
     if(isset($_POST['addbtn']))
     {
     
-		$f =$_POST['txtfn'];
-     	 $uui ="ac_year_";
-		 $v="_";
-	     $yu =substr($f,0,4);
-	     $yu1 =substr($f,5,8);
-         $uu = $uui.$yu.$v.$yu1;
-	
-         $uu = $uui.$yu.$v.$yu1;
-	    
-        if(!$f)
+		$l =$_POST['txtlc'];
+		$d =$_POST['txtde'];
+		
+        //
+        if(!$l)
         {
         	echo "<script type='text/javascript'>alert('Fill detail')</script>";
         }
         else
         {
-		   $query ="INSERT INTO ac_year (year,table_name ) VALUES ('$f',' $uu' )";
-          $query1="CREATE TABLE  ".$uu." (S_Id INT(50) NOT NULL AUTO_INCREMENT, Reg_No varchar(50),Index_No varchar(50),Tittle varchar(50) ,Name varchar(50),PRIMARY KEY (S_Id))";
-		       
-		
-        	
-		    $result1 =mysql_query($query1);
+        	$query_se ="SELECT dep_id FROM department WHERE dep_name='$d'";
+        	$result_se =mysql_query($query_se);
+        	while($query_row =mysql_fetch_array($result_se))
+              {
+                   $dep_id =$query_row['dep_id'];
+              }	
+            //echo $dep_id;
+		    $query ="UPDATE lecturers SET dept_id='$dep_id'  WHERE lec_name ='$l'";
 	        $result =mysql_query($query);
 	         if(!$result)
 	             {
 	          
-	             	echo "<script type='text/javascript'>alert('Insert is faild');window.location = \"Add_Academic_year_tables.php\"</script>";
+	             	echo "<script type='text/javascript'>alert('Insert is faild');window.location = \"fact_hd_asgn_lec.php\"</script>";
 	             	
 	             }
 	             else
 	             {
 
 	             	
-	             	echo "<script type='text/javascript'>alert('Insert successfully');window.location = \"Add_Academic_year_tables.php\"</script>";
+	             	echo "<script type='text/javascript'>alert('Successfully');window.location = \"fact_hd_asgn_lec.php\"</script>";
 	             	
 	             	
 	             }

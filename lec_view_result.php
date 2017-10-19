@@ -1,10 +1,12 @@
-<?php 
-    session_start();
+<?php
+
+session_start();
     $role = $_SESSION['sess_userrole'];
     if(!isset($_SESSION['sess_username']) && $role!="admin"){
       header('Location: login.php?err=2');
     }
 ?>
+
 
 
 <!DOCTYPE html>
@@ -66,10 +68,9 @@
 				</button>
 
 				<div class="navbar-header pull-left">
-					<a href="fact_hd_index.php" class="navbar-brand">
+					<a href="#" class="navbar-brand">
 						<small>
-							<?php echo $_SESSION['sess_username'];?>| University Of Jaffna
-							
+							<?php echo $_SESSION['sess_username'];?> | Department of Computer Science
 						</small>
 					</a>
 				</div>
@@ -85,9 +86,6 @@
 						<li class="light-blue dropdown-modal">
 							<a data-toggle="dropdown" href="#" class="dropdown-toggle">
 								
-								<span class="user-info">
-									
-								</span>
 
 								<i class="ace-icon fa fa-caret-down"></i>
 							</a>
@@ -96,11 +94,11 @@
 								
 
 								
+
 								<li>
 									<a href="logout.php">
 										<i class="ace-icon fa fa-power-off"></i>
 										Logout
-										
 									</a>
 								</li>
 							</ul>
@@ -115,60 +113,17 @@
 				try{ace.settings.loadState('main-container')}catch(e){}
 			</script>
 
-			<div id="sidebar" class="sidebar                  responsive                    ace-save-state">
+			<!-- <div id="sidebar" class="sidebar                  responsive                    ace-save-state">
 				<script type="text/javascript">
 					try{ace.settings.loadState('sidebar')}catch(e){}
 				</script>
 
-				<!-- /.sidebar-shortcuts -->
+				/.sidebar-shortcuts 
 
-				<ul class="nav nav-list">
-					
-					<li class="">
-						<a href="fact_hd_index.php">
-							
-							<span class="menu-text">Add Department</span>
-						</a>
+				
 
-						<b class="arrow"></b>
-					</li>
-					
-					
-					<li class="active">
-						<a href="fact_hd_assign_dean.php">
-							
-							<span class="menu-text">Assign Department Head</span>
-						</a>
-
-						<b class="arrow"></b>
-					</li>
-					
-					
-					<li class="">
-						<a href="fact_hd_asgn_lec.php" >
-						
-							<span class="menu-text">Assign Lecturer</span>
-
-							
-						</a>
-					</li>
-					
-					
-					<li class="">
-						<a href="fact_hd_change_password.php">
-						
-							<span class="menu-text">Change Passwords</span>
-						</a>
-
-						<b class="arrow"></b>
-					</li>
-					
-				</ul><!-- /.nav-list -->
-
-				<div class="sidebar-toggle sidebar-collapse" id="sidebar-collapse">
-					<i id="sidebar-toggle-icon" class="ace-icon fa fa-angle-double-left ace-save-state" data-icon1="ace-icon fa fa-angle-double-left" data-icon2="ace-icon fa fa-angle-double-right"></i>
-				</div>
-			</div>
+				
+			</div>-->
 
 			<div class="main-content">
 				<div class="main-content-inner">
@@ -185,11 +140,34 @@
 
 					<div class="page-content">
 						<!-- /.ace-settings-container -->
-<div class="page-header">
+          <div class="page-header">
 							<h1>
-								Assign Departmnet Head
+								
 								<small>
-									<i class="ace-icon fa fa-angle-double-right"></i>
+									
+								<?php
+include('db_config.php');
+//$varid_id =$_GET['prop_id'];
+//$_SESSION['ac']=$_GET['prop_id'];
+//echo $varid_id ;
+//$fac="SELECT year FROM ac_year Where id=".$varid_id."";
+
+$yr5= $_SESSION['yr'];
+echo $_SESSION['yr'];
+
+echo " | ";
+if(isset($_GET['prop_id']))
+{
+	$cnam=$_GET['prop_id'];
+	$cos=$_GET['prop_id'];
+}
+
+echo $cnam;
+
+//$i =1;
+
+?>
+<?php// echo  $name;  ?>
 									
 								</small>
 							</h1>
@@ -209,8 +187,12 @@
 											<div class="pull-right tableTools-container"></div>
 										</div>
 										<div class="table-header">
-											Department Head details
-											
+											Evaluating :
+										<?php if(isset($_GET['prop_id']))
+{
+	echo"$cnam";
+	
+}	?>
 										</div>
 											<br>
 										
@@ -218,185 +200,456 @@
 
 										<!-- div.dataTables_borderWrap -->
 										<div align="center"  >
-<div>
-															<?php
+<html>
+
+
+<body>
+<center>
+<br>
+<?php
 include('db_config.php');
 
-/* $query ="SELECT 
-				lecturers.lec_name  AS lecr_name,
+ 
+		$user = $_SESSION['sess_username'];
+    $query_lec = "SELECT signup.lec_id FROM signup WHERE signup.username='$user'";
+
+		$result_lec= mysql_query($query_lec);
+		 while($row_lec = mysql_fetch_array($result_lec))
+			{
 				
-				department.dep_name AS dept_name FROM lecturers JOIN department ON department.fac_id=lecturers.dept_id "; */
+				$lec_id = $row_lec['lec_id'];
 				
-$query ="SELECT lecturers.lec_name AS lecr_name,department.dep_name AS deprt_name FROM lecturers INNER JOIN department ON department.hd_id=lecturers.id where lecturers.fact_id=(SELECT fac_id FROM faculty_admin where faculty_admin.fac_admin_name='".$_SESSION['sess_username']."')";
+			}	
+			
+				$user = $_SESSION['sess_username'];
+    $query_dep = "SELECT signup.dep_id FROM signup WHERE signup.username='$user'";
+
+		$result_dep= mysql_query($query_dep);
+		 while($row_dep = mysql_fetch_array($result_dep))
+			{
+				
+				$dept_id = $row_dep['dep_id'];
+			}
+			
+			
+
+		$query5 = "SELECT id FROM exam_format WHERE dep_id='$dept_id' AND courseid='$cos' AND ac_id='$yr5'";
+		$result5= mysql_query($query5) or die(mysql_error());
+		 while($row5 = mysql_fetch_array($result5))
+			{
+				
+				$id5 = $row5['id'];
+				
+			}
+
+			
+			//$query ="SELECT DISTINCT `year`  FROM  `ac_year` INNER JOIN `assign_lecturer` ON ac_year.id=assign_lecturer.acdm_yr_id WHERE assign_lecturer.lec_id='$lec_id'";
+			
+			$query="SELECT DISTINCT year
+FROM ac_year
+INNER JOIN assign_lecturer ON ac_year.id = assign_lecturer.acdm_yr_id;";
+			
+$result2=mysql_query($query) or die(mysql_error());
 
 
-$result=mysql_query($query);
+
+
+	
 $i =0;
-
-$query_drop = "SELECT dep_name FROM department where department.fac_id=(SELECT fac_id FROM faculty_admin where faculty_admin.fac_admin_name='".$_SESSION['sess_username']."')";
-$result2=mysql_query($query_drop);
-
-$query_drop2 = "SELECT lec_name FROM lecturers where lecturers.fact_id=(SELECT fac_id FROM faculty_admin where faculty_admin.fac_admin_name='".$_SESSION['sess_username']."')";
-
-$result3=mysql_query($query_drop2);
-
-
-
-
-$query_se ="SELECT fac_id FROM signup WHERE username='".$_SESSION['sess_username']."'";
-$result_se =mysql_query($query_se);
-$query_row =mysql_fetch_array($result_se);
-$fac_id =$query_row['fac_id'];
 
 ?>
 
-<form  action="<?php echo $_SERVER['PHP_SELF']; ?>" method="POST" >
+<form  action="Add_Academic_year_tables_Copy4details.php" method="POST" >
 <table id="simple-table" class="table  table-bordered table-hover">
-											<thead>
-  <tr>
+  <thead>
   
-   <th width="400"> <div align="center">Name of Departmnet</div></th>
-    <th width="400"> <div align="center">Name of Head</div></th>
-     <th width="50"> <div align="center">Add</div></th>
-	 
+  
    
+    <tr width="600"> <div align="center"></div></tr>
    
-    
-
+    <span class="green">
+	<!--<th  width="20"> <div ><a class="blue" href="#"><i class="ace-icon glyphicon glyphicon-ok"></i></a> </div></th>
+    <th width="70"> <div align="center"><a class="green" href="#"><i class="ace-icon fa fa-pencil bigger-130"></i></a> </div></th></span>
+    <th width="70"> <div align="center"><a class="red" href="#"><i class="ace-icon fa fa-trash-o bigger-120"></i></a> </div></th>
+	-->
    
-  </tr>
+  
 
 <?php
+	$query6 = "SELECT * FROM exam_format WHERE id='$id5'";
+	$result6= mysql_query($query6) or die(mysql_error());
+		 while($row6 = mysql_fetch_array($result6))
+			{
+				
+				$id6 = $row6['id'];
+				$format = $row6['main_object'];
+				
+			}
 
-while($query_row =mysql_fetch_array($result))
-   {
-	 
-	   
-	   echo "<td>";
-	   echo '<input type="text" size="50" value ="'.$query_row['deprt_name'].'" name ="fn'.$i.'"/>';
-	   echo "</td>";
-	   echo "<td>";
-	   echo '<input type="text" size="50" value ="'.$query_row['lecr_name'].'" name ="fn'.$i.'"/>';
-	   echo "</td>";
-		
-	  
-		
-		echo "<td>";
-	    echo '<input type="hidden" name="check-all'.$i.'" />';
-	    echo "</td>";
-	   
 
-        
-	    
-		
-		echo "</tr>";
-		$i++;
-		 
-	  
+$main_dis='Add '.$format.' Marks';
+
+ $_SESSION['ex_id']=$id6;
+echo "<tr>";
+ echo '<td><a href="lec_form_edit.php">Edit Exam Format ( not reccomended ) </a></td>';
+ //waradi ekk pennd
+echo "</tr>";
+
+
+
+$_SESSION['main_type']=$main_dis;
+ echo "<tr>";
+ echo '<td><a href="lec_main_obj_add.php">'.$main_dis.'</a></td>';
+ //ece add
+echo "</tr>";
+
+   $_SESSION['ex_id']=$id6;
    
-   }
+   
+   $query7  = "SELECT method_id FROM exam_format WHERE id='$id6'";
+   $result7 = mysql_query($query7) or die(mysql_error());
+		 while($row7 = mysql_fetch_array($result7))
+			{
+				
+				$id7 = $row7['method_id'];
+				
+				
+			}
+			
+			
+	$query8  = "SELECT no_of_objs FROM evaluation_method WHERE id='$id7'";
+   $result8 = mysql_query($query8) or die(mysql_error());
+		 while($row8 = mysql_fetch_array($result8))
+			{
+				
+				$id8 = $row8['no_of_objs'];
+				
+				
+			}		
+   
+   $num2 = $id8-1;
+ 
+  
+   $main_view='View '.$format.' Marks';  
+   
+$x1=1;
+for($x2=1; $x2<=$num2; $x2++)
+{
+$val='obj'.$x2;
+
+			if($x2==1)
+			{
+				
+			$query9  =  "SELECT `$val` FROM exam_format WHERE  id='$id6'";;
+			   $result9 = mysql_query($query9) ;
+					 while($row9 = mysql_fetch_array($result9))
+						{
+							
+							$id9 = $row9[$val];
+							
+							
+						}	
+						$val1='Add '.$id9.' Marks';
+				echo "<tr>";
+				 echo '<td><a href="lec_obj2_add.php">'.$val1.'</a></td>';
+				echo "</tr>";		
+						
+			}
+			
+			
+			
+			if($x2==2)
+			{
+				
+			$query10  =  "SELECT `$val` FROM exam_format WHERE  id='$id6'";;
+			   $result10 = mysql_query($query10) ;
+					 while($row10 = mysql_fetch_array($result10))
+						{
+							
+							$id10 = $row10[$val];
+							
+							
+						}	
+						$val2='Add '.$id10.' Marks';
+				echo "<tr>";
+				 echo '<td><a href="lec_obj2_add.php">'.$val2.'</a></td>';
+				echo "</tr>";		
+						
+			}
+			
+			
+			
+			if($x2==3)
+			{
+				
+			$query11  =  "SELECT `$val` FROM exam_format WHERE  id='$id6'";;
+			   $result11 = mysql_query($query11) ;
+					 while($row11 = mysql_fetch_array($result11))
+						{
+							
+							$id11 = $row11[$val];
+							
+							
+						}	
+						$val3='Add '.$id11.' Marks';
+				echo "<tr>";
+				 echo '<td><a href="lec_obj2_add.php">'.$val3.'</a></td>';
+				echo "</tr>";		
+						
+			}
+			
+			
+			if($x2==4)
+			{
+				
+			$query12  =  "SELECT `$val` FROM exam_format WHERE  id='$id6'";;
+			   $result12 = mysql_query($query12) ;
+					 while($row12 = mysql_fetch_array($result12))
+						{
+							
+							$id12 = $row12[$val];
+							
+							
+						}	
+						$val4='Add '.$id12.' Marks';
+				echo "<tr>";
+				 echo '<td><a href="lec_obj2_add.php">'.$val4.'</a></td>';
+				echo "</tr>";		
+						
+			}
+			
+			
+			if($x2==5)
+			{
+				
+			$query13  =  "SELECT `$val` FROM exam_format WHERE  id='$id6'";;
+			   $result13 = mysql_query($query13) ;
+					 while($row13 = mysql_fetch_array($result13))
+						{
+							
+							$id13 = $row13[$val];
+							
+							
+						}	
+						$val5='Add '.$id13.' Marks';
+				echo "<tr>";
+				 echo '<td><a href="lec_obj2_add.php">'.$val5.'</a></td>';
+				echo "</tr>";		
+						
+			}
+			
+			
+			if($x2==6)
+			{
+				
+			$query14  =  "SELECT `$val` FROM exam_format WHERE  id='$id6'";;
+			   $result14 = mysql_query($query14) ;
+					 while($row14 = mysql_fetch_array($result14))
+						{
+							
+							$id14 = $row14[$val];
+							
+							
+						}	
+						$val6='Add '.$id14.' Marks';
+				echo "<tr>";
+				 echo '<td><a href="lec_obj2_add.php">'.$val6.'</a></td>';
+				echo "</tr>";		
+						
+			}
+			
+			
+			
+			if($x2==7)
+			{
+				
+			$query15 =  "SELECT `$val` FROM exam_format WHERE  id='$id6'";;
+			   $result15 = mysql_query($query16) ;
+					 while($row15 = mysql_fetch_array($result15))
+						{
+							
+							$id15 = $row15[$val];
+							
+							
+						}	
+						$val7='Add '.$id15.' Marks';
+				echo "<tr>";
+				 echo '<td><a href="lec_obj2_add.php">'.$val7.'</a></td>';
+				echo "</tr>";		
+						
+			}
+
+}
+//up to
+
+$main_dis1='View '.$format.' Marks';
+echo "<tr>";
+ echo '<td><a href="lec_main_obj_view.php">'.$main_dis1.'</a></td>';
+ //view ece
+echo "</tr>";
+
+
+
+$x1=1;
+for($x2=1; $x2<=$num2; $x2++)
+{
+$val='obj'.$x2;
+
+			if($x2==1)
+			{
+				
+			$query9  =  "SELECT `$val` FROM exam_format WHERE  id='$id6'";;
+			   $result9 = mysql_query($query9) ;
+					 while($row9 = mysql_fetch_array($result9))
+						{
+							
+							$id9 = $row9[$val];
+							
+							
+						}	
+						$val1='View '.$id9.' Marks';
+				echo "<tr>";
+				 echo '<td><a href="lec_obj2_view.php">'.$val1.'</a></td>';
+				echo "</tr>";		
+						
+			}
+			
+			
+			
+			if($x2==2)
+			{
+				
+			$query10  =  "SELECT `$val` FROM exam_format WHERE  id='$id6'";;
+			   $result10 = mysql_query($query10) ;
+					 while($row10 = mysql_fetch_array($result10))
+						{
+							
+							$id10 = $row10[$val];
+							
+							
+						}	
+						$val2='View '.$id10.' Marks';
+				echo "<tr>";
+				 echo '<td><a href="lec_obj2_view.php">'.$val2.'</a></td>';
+				echo "</tr>";		
+						
+			}
+			
+			
+			
+			if($x2==3)
+			{
+				
+			$query11  =  "SELECT `$val` FROM exam_format WHERE  id='$id6'";;
+			   $result11 = mysql_query($query11) ;
+					 while($row11 = mysql_fetch_array($result11))
+						{
+							
+							$id11 = $row11[$val];
+							
+							
+						}	
+						$val3='View '.$id11.' Marks';
+				echo "<tr>";
+				 echo '<td><a href="lec_obj2_view.php">'.$val3.'</a></td>';
+				echo "</tr>";		
+						
+			}
+			
+			
+			if($x2==4)
+			{
+				
+			$query12  =  "SELECT `$val` FROM exam_format WHERE  id='$id6'";;
+			   $result12 = mysql_query($query12) ;
+					 while($row12 = mysql_fetch_array($result12))
+						{
+							
+							$id12 = $row12[$val];
+							
+							
+						}	
+						$val4='View '.$id12.' Marks';
+				echo "<tr>";
+				 echo '<td><a href="lec_obj2_view.php">'.$val4.'</a></td>';
+				echo "</tr>";		
+						
+			}
+			
+			
+			if($x2==5)
+			{
+				
+			$query13  =  "SELECT `$val` FROM exam_format WHERE  id='$id6'";;
+			   $result13 = mysql_query($query13) ;
+					 while($row13 = mysql_fetch_array($result13))
+						{
+							
+							$id13 = $row13[$val];
+							
+							
+						}	
+						$val5='View '.$id13.' Marks';
+				echo "<tr>";
+				 echo '<td><a href="lec_obj2_view.php">'.$val5.'</a></td>';
+				echo "</tr>";		
+						
+			}
+			
+			
+			if($x2==6)
+			{
+				
+			$query14  =  "SELECT `$val` FROM exam_format WHERE  id='$id6'";;
+			   $result14 = mysql_query($query14) ;
+					 while($row14 = mysql_fetch_array($result14))
+						{
+							
+							$id14 = $row14[$val];
+							
+							
+						}	
+						$val6='View '.$id14.' Marks';
+				echo "<tr>";
+				 echo '<td><a href="lec_obj2_view.php">'.$val6.'</a></td>';
+				echo "</tr>";		
+						
+			}
+			
+			
+			
+			if($x2==7)
+			{
+				
+			$query15 =  "SELECT `$val` FROM exam_format WHERE  id='$id6'";;
+			   $result15 = mysql_query($query16) ;
+					 while($row15 = mysql_fetch_array($result15))
+						{
+							
+							$id15 = $row15[$val];
+							
+							
+						}	
+						$val7='View '.$id15.' Marks';
+				echo "<tr>";
+				 echo '<td><a href="lec_obj2_view.php">'.$val7.'</a></td>';
+				echo "</tr>";		
+						
+			}
+
+}
    echo "<tr>";
-    
-    
-
-    echo "<td>";
-    echo '<input type ="hidden" name = "txtfn"/>';
-	echo "<select name='dep_name'>";
-		while($row = mysql_fetch_array($result2))
-		{
-			echo "<option value='".$row['dep_name']."'>".$row['dep_name']."</option>";
-		}
-	echo "</select>";	
-	
-	
-	
-    echo "</td>";
-	
-	 echo "<td>";
-    echo '<input type ="hidden" name = "txtfn"/>';
-	echo "<select name='lec_name'>";
-		while($row = mysql_fetch_array($result3))
-		{
-			echo "<option value='".$row['lec_name']."'>".$row['lec_name']."</option>";
-		}
-	echo "</select>";	
-	
-    echo "</td>";
-	
-	
-
-	
-
-    
-    echo "<td>";
-    /* echo '<input type ="submit" value ="Add" name ="addbtn"/>'; */
-	echo'<button class="btn btn-white btn-info btn-bold" type ="submit" name ="addbtn">
-												<i class="ace-icon glyphicon glyphicon-plus"></i>
-												
-											</button>';
-									
-    if(isset($_POST['addbtn']))
-    {
-    
-		$f =$_POST['dep_name'];
-		$l =$_POST['lec_name'];
-		//echo $f;
-		//echo $l;
-
-		$query_id ="SELECT id FROM lecturers WHERE 	lec_name='$l'";
-		$result_id =mysql_query($query_id);
-		 while($query_row =mysql_fetch_array($result_id))
-              {
-                   $id =$query_row['id'];
-              }
-        //echo $id;
-        $query_id1 ="SELECT dep_id FROM department WHERE  dep_name='$f'";
-		$result_id1 =mysql_query($query_id1);
-		 while($query_row =mysql_fetch_array($result_id1))
-              {
-                   $dept_id =$query_row['dep_id'];
-              }	
-             //echo $dept_id;
-    
-        $query_up ="UPDATE department SET 	hd_id='$id' WHERE dep_name='$f' ";
-		$result_up =mysql_query($query_up);
-
-
-
-        echo $fac_id;
-
-		$query_up1 ="UPDATE signup SET fac_id='$fac_id', dep_id='$dept_id' WHERE name='$l' ";
-		$result_up1 =mysql_query($query_up1);
-
-
-         if($result_up1)
-	             {
-	             
-	             	 echo "<script type='text/javascript'>alert('successfully');window.location = \"fact_hd_assign_dean.php\"</script>";
-	             	
-	             }
-	             else
-	             {
-	             	 echo "<script type='text/javascript'>alert('Error');window.location = \"fact_hd_assign_dean.php\"</script>";
-	             	// echo $r;   	
-	             	                
-	             }
-       
-
-    }
-   
-    echo "</td>";
-
-
-
    echo "</tr>";
 ?>
 </thead>
 </table>
 </form>
 
+</center>
 
-														<hr />
+
+</body>
+</html>
 
 
 										</div>

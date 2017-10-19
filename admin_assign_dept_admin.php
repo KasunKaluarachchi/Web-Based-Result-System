@@ -93,15 +93,7 @@
 							<ul class="user-menu dropdown-menu-right dropdown-menu dropdown-yellow dropdown-caret dropdown-close">
 								
 
-								<li>
-									<a href="profile.html">
-										<i class="ace-icon fa fa-user"></i>
-										Profile
-									</a>
-								</li>
-
-								<li class="divider"></li>
-
+								
 								<li>
 									<a href="logout.php">
 										<i class="ace-icon fa fa-power-off"></i>
@@ -163,7 +155,7 @@
 						</a>
 
 						<b class="arrow"></b>
-					</li><br>
+					</li>
 					
 					
 					
@@ -203,7 +195,7 @@
 					<?php
 					include('db_config.php');
 					$query_drop = "SELECT fac_name FROM faculty";
-$result2=mysql_query($query_drop);
+                     $result2=mysql_query($query_drop);
 					
 					
 					

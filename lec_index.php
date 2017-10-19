@@ -1,13 +1,17 @@
-<?php 
-    session_start();
+<?php
+
+session_start();
     $role = $_SESSION['sess_userrole'];
     if(!isset($_SESSION['sess_username']) && $role!="admin"){
       header('Location: login.php?err=2');
     }
 ?>
+
+
+
 <!DOCTYPE html>
 <html lang="en">
-	<head>
+	<head>	
 		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
 		<meta charset="utf-8" />
 		<title>Tables - Ace Admin</title>
@@ -64,14 +68,9 @@
 				</button>
 
 				<div class="navbar-header pull-left">
-					<a href="index.html" class="navbar-brand">
+					<a href="#" class="navbar-brand">
 						<small>
-							<?php echo $_SESSION['sess_username'];
-							
-							 
-							?>
-							
- | University Of Jaffna
+							<?php echo $_SESSION['sess_username'];?> | Department of Computer Science
 						</small>
 					</a>
 				</div>
@@ -86,10 +85,7 @@
 
 						<li class="light-blue dropdown-modal">
 							<a data-toggle="dropdown" href="#" class="dropdown-toggle">
-								<img class="nav-user-photo" src="assets/images/avatars/avatar2.png" alt="Jason's Photo" />
-								<span class="user-info">
-									Admin
-								</span>
+								
 
 								<i class="ace-icon fa fa-caret-down"></i>
 							</a>
@@ -97,14 +93,8 @@
 							<ul class="user-menu dropdown-menu-right dropdown-menu dropdown-yellow dropdown-caret dropdown-close">
 								
 
-								<li>
-									<a href="profile.html">
-										<i class="ace-icon fa fa-user"></i>
-										Profile
-									</a>
-								</li>
+								
 
-								<li class="divider"></li>
 
 								<li>
 									<a href="logout.php">
@@ -146,14 +136,7 @@
 							
 						</ul><!-- /.breadcrumb -->
 
-						<div class="nav-search" id="nav-search">
-							<form class="form-search">
-								<span class="input-icon">
-									<input type="text" placeholder="Search ..." class="nav-search-input" id="nav-search-input" autocomplete="off" />
-									<i class="ace-icon fa fa-search nav-search-icon"></i>
-								</span>
-							</form>
-						</div><!-- /.nav-search -->
+						<!-- /.nav-search -->
 					</div>
 
 					<div class="page-content">
@@ -200,9 +183,35 @@
 <?php
 include('db_config.php');
 
-$query ="SELECT * FROM  ac_year";
-$result=mysql_query($query);
-$i =1;
+ 
+		$user = $_SESSION['sess_username'];
+    $query_lec = "SELECT signup.lec_id FROM signup WHERE signup.username='$user'";
+
+		$result_lec= mysql_query($query_lec);
+		 while($row_lec = mysql_fetch_array($result_lec))
+			{
+				
+				$lec_id = $row_lec['lec_id'];
+				
+			}	
+
+
+
+
+			
+			//$query ="SELECT DISTINCT `year`  FROM  `ac_year` INNER JOIN `assign_lecturer` ON ac_year.id=assign_lecturer.acdm_yr_id WHERE assign_lecturer.lec_id='$lec_id'";
+			
+			$query="SELECT DISTINCT year
+FROM ac_year
+INNER JOIN assign_lecturer ON ac_year.id = assign_lecturer.acdm_yr_id;";
+			
+$result2=mysql_query($query) or die(mysql_error());
+
+
+
+
+	
+$i =0;
 
 ?>
 
@@ -223,11 +232,13 @@ $i =1;
   
 
 <?php
-
-while($query_row =mysql_fetch_array($result))
+$prop_id =0;
+while($query_row =mysql_fetch_array($result2))
   {
-	   echo '<td><a href="lec_sub.php?prop_id='.$i.'">'.$query_row['year'].'</a></td>';
-		echo "</tr>";
+	  
+	   echo '<td><a href="lec_sub.php?prop_id='.$query_row['year'].'">'.$query_row['year'].'</a></td>';
+	  // $_SESSION['ac']=$_GET['value'];
+	   echo "</tr>";
 		$i++;
    }
    echo "<tr>";

@@ -1,0 +1,23 @@
+		$user = $_SESSION['sess_username'];
+    $query_dep = "SELECT signup.dep_id FROM signup WHERE signup.username='$user'";
+
+		$result_dep= mysql_query($query_dep);
+		 while($row_dep = mysql_fetch_array($result_dep))
+			{
+				
+				$dept_id = $row_dep['dep_id'];
+			}
+			
+			
+			
+			
+			
+			for($i = 1; $i<=$num1; $i++)
+			 {
+			 $cnam=$num.'-'.$i; 
+			 $query3 = " ALTER TABLE $tnam	ADD $cnam int(5)"	;		
+			 $result3 =mysql_query($query3);
+			 }
+			 
+			  $query4 = " ALTER TABLE $tnam	ADD Total double(5,2)"	;		
+			 $result4 =mysql_query($query4

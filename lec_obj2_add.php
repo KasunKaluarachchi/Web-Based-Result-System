@@ -1,20 +1,19 @@
 <?php 
+     //error_reporting(0);
     session_start();
     $role = $_SESSION['sess_userrole'];
     if(!isset($_SESSION['sess_username']) && $role!="admin"){
       header('Location: login.php?err=2');
     }
 ?>
-
-
 <!DOCTYPE html>
 <html lang="en">
 	<head>
 		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
 		<meta charset="utf-8" />
-		<title>Tables - Ace Admin</title>
+		<title>Exam Result Summarizing System</title>
 
-		<meta name="description" content="Static &amp; Dynamic Tables" />
+		<meta name="description" content="and Validation" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
 
 		<!-- bootstrap & fontawesome -->
@@ -22,6 +21,7 @@
 		<link rel="stylesheet" href="assets/font-awesome/4.5.0/css/font-awesome.min.css" />
 
 		<!-- page specific plugin styles -->
+		<link rel="stylesheet" href="assets/css/select2.min.css" />
 
 		<!-- text fonts -->
 		<link rel="stylesheet" href="assets/css/fonts.googleapis.com.css" />
@@ -66,10 +66,10 @@
 				</button>
 
 				<div class="navbar-header pull-left">
-					<a href="fact_hd_index.php" class="navbar-brand">
+					<a href="lec_ex_type.php" class="navbar-brand">
 						<small>
-							<?php echo $_SESSION['sess_username'];?>| University Of Jaffna
-							
+							Lecturer | Dr. X
+								<?php echo $_SESSION['sess_username'];?>
 						</small>
 					</a>
 				</div>
@@ -77,7 +77,7 @@
 				<div class="navbar-buttons navbar-header pull-right" role="navigation">
 					<ul class="nav ace-nav">
 						<!--  -->
-                         
+
 						
 
 						
@@ -85,10 +85,6 @@
 						<li class="light-blue dropdown-modal">
 							<a data-toggle="dropdown" href="#" class="dropdown-toggle">
 								
-								<span class="user-info">
-									
-								</span>
-
 								<i class="ace-icon fa fa-caret-down"></i>
 							</a>
 
@@ -96,11 +92,11 @@
 								
 
 								
+
 								<li>
 									<a href="logout.php">
 										<i class="ace-icon fa fa-power-off"></i>
 										Logout
-										
 									</a>
 								</li>
 							</ul>
@@ -115,83 +111,83 @@
 				try{ace.settings.loadState('main-container')}catch(e){}
 			</script>
 
-			<div id="sidebar" class="sidebar                  responsive                    ace-save-state">
-				<script type="text/javascript">
-					try{ace.settings.loadState('sidebar')}catch(e){}
-				</script>
+			
+           <?php
+include('db_config.php');
+$varid_id =$_SESSION['ex_id'];
+//$_SESSION['sub']=$_GET['prop_id'];
 
-				<!-- /.sidebar-shortcuts -->
 
-				<ul class="nav nav-list">
-					
-					<li class="">
-						<a href="fact_hd_index.php">
-							
-							<span class="menu-text">Add Department</span>
-						</a>
 
-						<b class="arrow"></b>
-					</li>
-					
-					
-					<li class="active">
-						<a href="fact_hd_assign_dean.php">
-							
-							<span class="menu-text">Assign Department Head</span>
-						</a>
+$query ="SELECT ac_id,courseid,no_qstn FROM exam_format WHERE id ='$varid_id'";
+$result =mysql_query($query) ;
 
-						<b class="arrow"></b>
-					</li>
-					
-					
-					<li class="">
-						<a href="fact_hd_asgn_lec.php" >
-						
-							<span class="menu-text">Assign Lecturer</span>
+while($query_row=mysql_fetch_array($result))
+{
+	$yr =$query_row['ac_id'];
 
-							
-						</a>
-					</li>
-					
-					
-					<li class="">
-						<a href="fact_hd_change_password.php">
-						
-							<span class="menu-text">Change Passwords</span>
-						</a>
+	$sub1 =$query_row['courseid'];
+	$rw=$query_row['no_qstn'];
+	
+	
+}
 
-						<b class="arrow"></b>
-					</li>
-					
-				</ul><!-- /.nav-list -->
+$user = $_SESSION['sess_username'];
+    $query_dep = "SELECT signup.dep_id FROM signup WHERE signup.username='$user'";
 
-				<div class="sidebar-toggle sidebar-collapse" id="sidebar-collapse">
-					<i id="sidebar-toggle-icon" class="ace-icon fa fa-angle-double-left ace-save-state" data-icon1="ace-icon fa fa-angle-double-left" data-icon2="ace-icon fa fa-angle-double-right"></i>
-				</div>
-			</div>
+		$result_dep= mysql_query($query_dep);
+		 while($row_dep = mysql_fetch_array($result_dep))
+			{
+				
+				$dept_id = $row_dep['dep_id'];
+			}
 
+$query2 ="SELECT couseid FROM add_course WHERE coursename ='$sub1' AND dep_id='$dept_id'";
+$result2 =mysql_query($query2) ;
+
+while($query_row2=mysql_fetch_array($result2))
+{
+	
+
+	$sub2 =$query_row2['couseid'];
+	
+}
+
+
+
+
+
+$fac="SELECT year FROM ac_year Where id='".$varid_id."'";
+
+
+
+$result1=mysql_query($fac);
+
+$name=mysql_fetch_object($result1);
+
+$i =1;
+
+
+?>
 			<div class="main-content">
 				<div class="main-content-inner">
 					<div class="breadcrumbs ace-save-state" id="breadcrumbs">
 						<ul class="breadcrumb">
-							
-
-							
-							
+							<li class="active"><h4> 
+                       <?php echo "$yr"; ?>|<?php echo "$sub2"; ?>| <?php echo  "$sub1";  ?></h4></li>
 						</ul><!-- /.breadcrumb -->
 
-						<!-- /.nav-search -->
+					<!-- /.nav-search -->
 					</div>
 
 					<div class="page-content">
-						<!-- /.ace-settings-container -->
+						<div class="ace-settings-container" id="ace-settings-container">
+							
+						</div><!-- /.ace-settings-container -->
 <div class="page-header">
 							<h1>
-								Assign Departmnet Head
-								<small>
-									<i class="ace-icon fa fa-angle-double-right"></i>
-									
-								</small>
+								Main Object Analyze
+								
 							</h1>
 						</div>
 						<!-- /.page-header -->
@@ -209,86 +205,234 @@
 											<div class="pull-right tableTools-container"></div>
 										</div>
 										<div class="table-header">
-											Department Head details
-											
+											<?php
+									
+									
+									
+									echo $_SESSION['main_type'];
+									
+									
+									?>
 										</div>
-											<br>
-										
+
 										<!-- div.table-responsive -->
 
 										<!-- div.dataTables_borderWrap -->
-										<div align="center"  >
-<div>
-															<?php
+										<div>
+<?php
 include('db_config.php');
 
-/* $query ="SELECT 
-				lecturers.lec_name  AS lecr_name,
-				
-				department.dep_name AS dept_name FROM lecturers JOIN department ON department.fac_id=lecturers.dept_id "; */
-				
-$query ="SELECT lecturers.lec_name AS lecr_name,department.dep_name AS deprt_name FROM lecturers INNER JOIN department ON department.hd_id=lecturers.id where lecturers.fact_id=(SELECT fac_id FROM faculty_admin where faculty_admin.fac_admin_name='".$_SESSION['sess_username']."')";
+$query="SELECT qstn_no FROM add_course Where couseid='$sub2'";
+$result=mysql_query($query);
+$query_row =mysql_fetch_array($result);
+$qstn_no =$query_row['qstn_no'];
+//
+include('db_config.php');
 
+
+ 
+
+
+  	#$query="SELECT st_index,q1,q2,q3,q4,q5,q6 FROM $sub1";
+ $query="SELECT st_index,attempt,q1,q2,q3,q4,q5,q6,q7,q8 FROM $sub2";
 
 $result=mysql_query($query);
-$i =0;
 
-$query_drop = "SELECT dep_name FROM department where department.fac_id=(SELECT fac_id FROM faculty_admin where faculty_admin.fac_admin_name='".$_SESSION['sess_username']."')";
-$result2=mysql_query($query_drop);
-
-$query_drop2 = "SELECT lec_name FROM lecturers where lecturers.fact_id=(SELECT fac_id FROM faculty_admin where faculty_admin.fac_admin_name='".$_SESSION['sess_username']."')";
-
-$result3=mysql_query($query_drop2);
-
-
-
-
-$query_se ="SELECT fac_id FROM signup WHERE username='".$_SESSION['sess_username']."'";
-$result_se =mysql_query($query_se);
-$query_row =mysql_fetch_array($result_se);
-$fac_id =$query_row['fac_id'];
 
 ?>
 
 <form  action="<?php echo $_SERVER['PHP_SELF']; ?>" method="POST" >
 <table id="simple-table" class="table  table-bordered table-hover">
-											<thead>
-  <tr>
+<thead>
+<tr>
   
-   <th width="400"> <div align="center">Name of Departmnet</div></th>
-    <th width="400"> <div align="center">Name of Head</div></th>
-     <th width="50"> <div align="center">Add</div></th>
-	 
-   
-   
+<?php
+   echo '<th width="50"> <div align="center">Index</div></th>';
+   echo '<th width="50"> <div align="center">Attempt</div></th>';
+   for($i=1;$i<=$rw;$i++)
+   {
+     echo  "<th> ";
+     echo  "Question $i";
+     echo  "</th>";
     
-
+   } 
+?>
+    
+   <span class="green">
+	<th  width="20"> <div ><a class="blue" href="#"><i class="ace-icon glyphicon glyphicon-ok"></i></a> </div>
+	</th>
+    <th width="70"> <div align="center"><a class="green" href="#"><i class="ace-icon fa fa-pencil bigger-130"></i></a> </div></th></span>
+    <th width="70"> <div align="center"><a class="red" href="#"><i class="ace-icon fa fa-trash-o bigger-120"></i></a> </div></th>
+	
    
   </tr>
+ 
 
 <?php
 
-while($query_row =mysql_fetch_array($result))
+
+
+
+
+while($query_row=mysql_fetch_array($result))
    {
 	 
+	   echo "<td>";
+	   echo '<input type="text" size="10" value ="'.$query_row['st_index'].'" name ="st_index'.$i.'"/>';
+	   echo "</td>";
+        
+       echo "<td>";
+	   echo '<input type="text" size="10" value ="'.$query_row['attempt'].'" name ="attempt'.$i.'"/>';
+	   echo "</td>";
+
 	   
-	   echo "<td>";
-	   echo '<input type="text" size="50" value ="'.$query_row['deprt_name'].'" name ="fn'.$i.'"/>';
-	   echo "</td>";
-	   echo "<td>";
-	   echo '<input type="text" size="50" value ="'.$query_row['lecr_name'].'" name ="fn'.$i.'"/>';
-	   echo "</td>";
-		
+	   $y=1;
 	  
+	   if($y==1 && $y<=$rw){
+	   echo "<td>";
+	   echo '<input type="text" size="6" value ="'.$query_row['q1'].'" name ="q1'.$i.'"/>';
+	   echo "</td>";$y++;}
+if($y==2 && $y<=$rw){
+	   echo "<td>";
+	   echo '<input type="text" size="6" value ="'.$query_row['q2'].'" name ="q2'.$i.'"/>';
+	   echo "</td>";$y++;}
+if($y==3 && $y<=$rw){
+	   echo "<td>";
+	   echo '<input type="text"  size="6" value ="'.$query_row['q3'].'" name ="q3'.$i.'"/>';
+	   echo "</td>";$y++;}
+if($y==4 && $y<=$rw){
+	   echo "<td>";
+	   echo '<input type="text" size="6" value ="'.$query_row['q4'].'" name ="q4'.$i.'"/>';
+	   echo "</td>";$y++;}
+if($y==5 && $y<=$rw){
+	   echo "<td>";
+	   echo '<input type="text" size="6" value ="'.$query_row['q5'].'" name ="q5'.$i.'"/>';
+	   echo "</td>";$y++;}
+if($y==6 && $y<=$rw){
+	   echo "<td>";
+	   echo '<input type="text" size="6" value ="'.$query_row['q6'].'" name ="q6'.$i.'"/>';
+	   echo "</td>";$y++;}
+if($y==7 && $y<=$rw){	   
+	    echo "<td>";
+	   echo '<input type="text" size="6" value ="'.$query_row['q7'].'" name ="q7'.$i.'"/>';
+	   echo "</td>";$y++;}
+if($y==8 && $y<=$rw){
+	    echo "<td>";
+	   echo '<input type="text" size="6" value ="'.$query_row['q8'].'" name ="q8'.$i.'"/>';
+	   echo "</td>";$y++;}
+		
+		
+		
 		
 		echo "<td>";
-	    echo '<input type="hidden" name="check-all'.$i.'" />';
+	    echo '<input type="checkbox" name="check-all'.$i.'" />';
 	    echo "</td>";
 	   
+ 
+       
 
-        
+        echo "<td>";
 	    
 		
+		 echo '<button class="btn btn-white btn-default btn-round" name ="updatebtn'.$i.'" >
+												<i class="ace-icon glyphicon glyphicon-pencil"></i>
+												
+											</button>';
+	    
+		
+		
+		
+			
+		if(isset($_POST['updatebtn'.$i.'']))
+	    {
+	    	if(isset($_POST['check-all'.$i.'']))
+	    	{
+
+                //$r =$query_row['no'];
+           
+				 $id =$_POST['st_index'.$i.''];
+				 $at =$_POST['attempt'.$i.''];
+	             $q1 =$_POST['q1'.$i.''];
+	             $q2 =$_POST['q2'.$i.''];
+	             $q3 =$_POST['q3'.$i.''];
+	             $q4 =$_POST['q4'.$i.''];
+	             $q5 =$_POST['q5'.$i.''];
+	             $q6 =$_POST['q6'.$i.''];
+	             $q7 =$_POST['q7'.$i.''];
+	             $q8 =$_POST['q8'.$i.''];
+
+                $query ="UPDATE $sub2 SET attempt='$at',q1='$q1' ,q2='$q2',q3='$q3',q4='$q4',q5='$q5',q6='$q6',q7='$q7' ,q8='$q8' WHERE st_index='$id'";
+	   
+	             $result =mysql_query($query);
+	             if(!$result)
+	             {
+	             
+	             	 echo "<script type='text/javascript'>alert('Update failed');window.location = \"lec_main_obj_view.php\"</script>";
+	             }
+	             else
+	             {
+	             	 echo "<script type='text/javascript'>alert('Update successfully');window.location = \"lec_main_obj_view.php\"</script>";   	
+	             
+	                
+	             }
+
+	    	}
+	    	else
+	    	{
+	    	
+			echo "<script type='text/javascript'>alert('Select the check box');window.location = \"lec_main_obj_view.php\"</script>";
+	    		
+	    	}
+	    	
+	    }		
+
+			
+	    echo "</td>";
+
+	    echo "<td>";
+	    
+		
+		 echo '<button class="btn btn-white btn-warning btn-bold" name ="deletebtn'.$i.'" >
+												<i class="ace-icon fa fa-trash-o bigger-120 orange"></i>
+												
+											</button>';
+	    
+	    if(isset($_POST['deletebtn'.$i.'']))
+	    {
+	    	if(isset($_POST['check-all'.$i.'']))
+	    	{
+				   $id =$_POST['st_index'.$i.''];
+				 //$lc =$_POST['lc'.$i.''];
+               
+             
+                 $query ="DELETE FROM $sub2 WHERE st_index='$id'";
+	   
+	             $result =mysql_query($query);
+	             if($result)
+	             {
+	                echo "<script type='text/javascript'>alert('Delete successfully');window.location = \"lec_main_obj_view.php\"</script>";
+	             	
+	             }
+	             
+	             else
+	             {
+
+	             	echo "<script type='text/javascript'>alert('Delete is faild');window.location = \"lec_main_obj_view.php\"</script>";
+	             
+	             }
+
+	    	}
+	    	else
+	    	{
+	    		
+	    		echo "<script type='text/javascript'>alert('Select the check box');window.location = \"lec_main_obj_view.php\"</script>";
+	    	}
+	    
+	    }
+	    echo "</td>";	
+
+	    
+
 		echo "</tr>";
 		$i++;
 		 
@@ -297,35 +441,61 @@ while($query_row =mysql_fetch_array($result))
    }
    echo "<tr>";
     
-    
-
     echo "<td>";
-    echo '<input type ="hidden" name = "txtfn"/>';
-	echo "<select name='dep_name'>";
-		while($row = mysql_fetch_array($result2))
-		{
-			echo "<option value='".$row['dep_name']."'>".$row['dep_name']."</option>";
-		}
-	echo "</select>";	
-	
-	
-	
+    echo '<input type ="text" size="10"  name = "txtindex"/>';
     echo "</td>";
-	
-	 echo "<td>";
-    echo '<input type ="hidden" name = "txtfn"/>';
-	echo "<select name='lec_name'>";
-		while($row = mysql_fetch_array($result3))
-		{
-			echo "<option value='".$row['lec_name']."'>".$row['lec_name']."</option>";
-		}
-	echo "</select>";	
-	
-    echo "</td>";
-	
-	
 
-	
+
+     echo "<td>";
+     
+     echo '<select id="select" class="form-control" name="txtatempt">';
+     echo       '<option>P</option>';
+     echo       '<option>1R</option>';
+     echo       '<option>2R</option>';
+     echo       '<option>3R</option>';
+     echo    '</select>';
+
+     echo "</td>";
+
+	 $y=1;
+if($y==1 && $y<=$rw){	 
+     echo "<td>";
+    echo '<input type ="text" size="6" name = "txtq1"/>';
+    echo "</td>";$y++;}
+
+if($y==2 && $y<=$rw){
+    echo "<td>";
+    echo '<input type ="text" size="6" name = "txtq2"/>';
+    echo "</td>";$y++;}
+if($y==3 && $y<=$rw){
+     echo "<td>";
+    echo '<input type ="text" size="6" name = "txtq3"/>';
+    echo "</td>";$y++;}
+
+if($y==4 && $y<=$rw){
+    echo "<td>";
+    echo '<input type ="text" size="6" name = "txtq4"/>';
+    echo "</td>";$y++;}
+if($y==5 && $y<=$rw){
+      echo "<td>";
+    echo '<input type ="text" size="6" name = "txtq5"/>';
+    echo "</td>";$y++;}
+
+if($y==6 && $y<=$rw){
+    echo "<td>";
+    echo '<input type ="text"  size="6" name = "txtq6"/>';
+    echo "</td>";$y++;}
+if($y==7 && $y<=$rw){
+      echo "<td>";
+    echo '<input type ="text" size="6" name = "txtq7"/>';
+    echo "</td>";$y++;}
+
+if($y==8 && $y<=$rw){
+    echo "<td>";
+    echo '<input type ="text"  size="6" name = "txtq8"/>';
+    echo "</td>";$y++;}
+
+
 
     
     echo "<td>";
@@ -334,71 +504,121 @@ while($query_row =mysql_fetch_array($result))
 												<i class="ace-icon glyphicon glyphicon-plus"></i>
 												
 											</button>';
-									
+
     if(isset($_POST['addbtn']))
     {
     
-		$f =$_POST['dep_name'];
-		$l =$_POST['lec_name'];
-		//echo $f;
-		//echo $l;
+       $q1=$q2=$q3=$q4=$q5=$q6=$q7=$q8=0;
 
-		$query_id ="SELECT id FROM lecturers WHERE 	lec_name='$l'";
-		$result_id =mysql_query($query_id);
-		 while($query_row =mysql_fetch_array($result_id))
-              {
-                   $id =$query_row['id'];
-              }
-        //echo $id;
-        $query_id1 ="SELECT dep_id FROM department WHERE  dep_name='$f'";
-		$result_id1 =mysql_query($query_id1);
-		 while($query_row =mysql_fetch_array($result_id1))
-              {
-                   $dept_id =$query_row['dep_id'];
-              }	
-             //echo $dept_id;
-    
-        $query_up ="UPDATE department SET 	hd_id='$id' WHERE dep_name='$f' ";
-		$result_up =mysql_query($query_up);
+	    $id =$_POST['txtindex'];
+	    $attempt =$_POST['txtatempt'];
+		
+	 $y=1;
+		if($y==1 && $y<=$rw)
+		{	
+			$q1 =$_POST['txtq1'];
+			$y++;
+		}	
+		
+		
+		if($y==2 && $y<=$rw)
+		{
+	    $q2 =$_POST['txtq2'];
+		$y++;
+		}
+		
+		if($y==3 && $y<=$rw)
+		{
+		
+	    $q3 =$_POST['txtq3'];
+		$y++;
+		}
+		
+		if($y==4 && $y<=$rw)
+		{
+		
+	    $q4 =$_POST['txtq4'];
+		$y++;
+		}
+		
+		if($y==5 && $y<=$rw)
+		{
+		
+	    $q5 =$_POST['txtq5'];
+		$y++;
+		}
+		
+		if($y==6 && $y<=$rw)
+		{
+		
+	    $q6 =$_POST['txtq6'];
+		$y++;
+		}
+		
+		if($y==7 && $y<=$rw)
+		{
+		
+	    $q7 =$_POST['txtq7'];
+		$y++;
+		}
+		
+		if($y==8 && $y<=$rw)
+		{
+		
+	    $q8 =$_POST['txtq8'];
+		$y++;
+		}
+		
+		
+	    //$total =($q1+$q2+$q3+$q4+$q5+$q6)/4;
 
 
-
-        echo $fac_id;
-
-		$query_up1 ="UPDATE signup SET fac_id='$fac_id', dep_id='$dept_id' WHERE name='$l' ";
-		$result_up1 =mysql_query($query_up1);
-
-
-         if($result_up1)
+      
+        if(!$id)
+        {
+        	echo "<script type='text/javascript'>alert('Fill all details')</script>";
+        }
+        else
+        {
+        	$query ="INSERT INTO $sub2 (st_index,ac_year,attempt,q1,q2,q3,q4,q5,q6,q7,q8) VALUES ('$id','$yr','$attempt','$q1','$q2','$q3','$q4','$q5','$q6','$q7','$q8')";
+	   
+	        $result =mysql_query($query);
+	         if(!$result)
 	             {
-	             
-	             	 echo "<script type='text/javascript'>alert('successfully');window.location = \"fact_hd_assign_dean.php\"</script>";
+	          
+	             	echo "<script type='text/javascript'>alert('Insert is faild');window.location = \"lec_main_obj_view.php\"</script>";
 	             	
 	             }
 	             else
 	             {
-	             	 echo "<script type='text/javascript'>alert('Error');window.location = \"fact_hd_assign_dean.php\"</script>";
-	             	// echo $r;   	
-	             	                
-	             }
-       
 
+	             	
+	             	echo "<script type='text/javascript'>alert('Insert successfully');window.location = \"lec_main_obj_view.php\"</script>";
+	             	
+	             }
+
+        }
+        
     }
    
     echo "</td>";
-
-
-
    echo "</tr>";
+   echo "</thead>";
+   echo "</table>";
+   echo "</form>";
+  
+  
 ?>
-</thead>
-</table>
-</form>
 
 
-														<hr />
+										
+										
+			
 
 
+
+
+	
 										</div>
 									</div>
 								</div>
@@ -420,7 +640,8 @@ while($query_row =mysql_fetch_array($result))
 				<div class="footer-inner">
 					<div class="footer-content">
 						<span class="bigger-120">
-							<span class="blue bolder">University of Jaffna</span> &copy; 2016-2017
+							<span class="blue bolder">University of Jaffna</span>
+							Department of Computer Science &copy; 2016-2017
 						</span>
 
 						&nbsp; &nbsp;

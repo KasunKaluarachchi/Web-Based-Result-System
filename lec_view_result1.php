@@ -1,20 +1,19 @@
 <?php 
     session_start();
+    error_reporting(0);
     $role = $_SESSION['sess_userrole'];
     if(!isset($_SESSION['sess_username']) && $role!="admin"){
       header('Location: login.php?err=2');
     }
 ?>
-
-
 <!DOCTYPE html>
 <html lang="en">
 	<head>
 		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
 		<meta charset="utf-8" />
-		<title>Tables - Ace Admin</title>
+		<title>Form Wizard - Ace Admin</title>
 
-		<meta name="description" content="Static &amp; Dynamic Tables" />
+		<meta name="description" content="and Validation" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
 
 		<!-- bootstrap & fontawesome -->
@@ -22,6 +21,7 @@
 		<link rel="stylesheet" href="assets/font-awesome/4.5.0/css/font-awesome.min.css" />
 
 		<!-- page specific plugin styles -->
+		<link rel="stylesheet" href="assets/css/select2.min.css" />
 
 		<!-- text fonts -->
 		<link rel="stylesheet" href="assets/css/fonts.googleapis.com.css" />
@@ -66,10 +66,10 @@
 				</button>
 
 				<div class="navbar-header pull-left">
-					<a href="fact_hd_index.php" class="navbar-brand">
+					<a href="lec_ex_type.php" class="navbar-brand">
 						<small>
-							<?php echo $_SESSION['sess_username'];?>| University Of Jaffna
-							
+							Lecturer | Dr. X
+								<?php echo $_SESSION['sess_username'];?>
 						</small>
 					</a>
 				</div>
@@ -77,14 +77,14 @@
 				<div class="navbar-buttons navbar-header pull-right" role="navigation">
 					<ul class="nav ace-nav">
 						<!--  -->
-                         
+
 						
 
 						
 
 						<li class="light-blue dropdown-modal">
 							<a data-toggle="dropdown" href="#" class="dropdown-toggle">
-								
+								<img class="nav-user-photo" src="assets/images/avatars/avatar2.png" alt="Jason's Photo" />
 								<span class="user-info">
 									
 								</span>
@@ -95,12 +95,19 @@
 							<ul class="user-menu dropdown-menu-right dropdown-menu dropdown-yellow dropdown-caret dropdown-close">
 								
 
-								
+								<li>
+									<a href="profile.html">
+										<i class="ace-icon fa fa-user"></i>
+										Profile
+									</a>
+								</li>
+
+								<li class="divider"></li>
+
 								<li>
 									<a href="logout.php">
 										<i class="ace-icon fa fa-power-off"></i>
 										Logout
-										
 									</a>
 								</li>
 							</ul>
@@ -120,48 +127,135 @@
 					try{ace.settings.loadState('sidebar')}catch(e){}
 				</script>
 
-				<!-- /.sidebar-shortcuts -->
+				
 
 				<ul class="nav nav-list">
 					
+
 					<li class="">
-						<a href="fact_hd_index.php">
+						<a href="lec_ex_type.php" >
 							
-							<span class="menu-text">Add Department</span>
+							<span class="menu-text">
+								Select Exam Format
+							</span>
+
+							
 						</a>
 
 						<b class="arrow"></b>
-					</li>
-					
-					
-					<li class="active">
-						<a href="fact_hd_assign_dean.php">
-							
-							<span class="menu-text">Assign Department Head</span>
-						</a>
 
-						<b class="arrow"></b>
-					</li>
-					
-					
-					<li class="">
-						<a href="fact_hd_asgn_lec.php" >
 						
-							<span class="menu-text">Assign Lecturer</span>
+								</a>
+								
+							
+						
+					</li>
+					
+					<li class="">
+						<a href="lec_ica.php" >
+							
+							<span class="menu-text">
+								Add ICA Marks
+							</span>
 
 							
 						</a>
+
+						<b class="arrow"></b>
+
+						
+								
+								</a>
+						
 					</li>
 					
-					
 					<li class="">
-						<a href="fact_hd_change_password.php">
+						<a href="lec_ece.php" >
+							
+							<span class="menu-text">
+								Add ECE Marks
+							</span>
+
+							
+						</a>
+
+						<b class="arrow"></b>
+
+						
+								
+								</a>
+								
+							
+					</li>
+                     <li class="active">
+						<a href="lec_view_result.php">
+							
+
+							<span class="menu-text">
+								View Result
+
+								
+							</span>
+						</a>
+
+						<b class="arrow"></b>
+					</li>
+					<li class="">
+						<a href="lec_index.php">
+							
+
+							<span class="menu-text">
+								Change course
+
+								
+							</span>
+						</a>
+
+						<b class="arrow"></b>
+					</li>
+					<li class="">
+						<a href="lec_change_password.php">
 						
 							<span class="menu-text">Change Passwords</span>
 						</a>
 
 						<b class="arrow"></b>
 					</li>
+					 <?php
+include('db_config.php');
+
+//$_SESSION['sub']=$_GET['prop_id
+
+$query_se ="SELECT 	dep_id FROM signup WHERE 	username='".$_SESSION['sess_username']."'";
+$result_se =mysql_query($query_se);
+$query_see =mysql_fetch_array($result_se);
+$dept_id =$query_see['dep_id'];
+
+
+$query_se1 ="SELECT 	dep_name FROM department WHERE 	dep_id='$dept_id '";
+$result_se1 =mysql_query($query_se1);
+$query_see1 =mysql_fetch_array($result_se1);
+$dep_name =$query_see1['dep_name'];
+
+
+
+
+
+
+
+$query ="SELECT coursename,couseid FROM add_course WHERE coursename='".$_SESSION['coursename']."'";
+$result =mysql_query($query);
+$query_row =mysql_fetch_array($result);
+
+$sub1 =$query_row['couseid'];
+
+
+
+
+$i =1;
+
+?>
+
 					
 				</ul><!-- /.nav-list -->
 
@@ -174,23 +268,26 @@
 				<div class="main-content-inner">
 					<div class="breadcrumbs ace-save-state" id="breadcrumbs">
 						<ul class="breadcrumb">
-							
-
-							
-							
+						<h4>	<?php echo $_SESSION['ac']; ?>|<?php echo $sub1 ?>| <?php echo $_SESSION['coursename']  ?></h4></li>
 						</ul><!-- /.breadcrumb -->
 
 						<!-- /.nav-search -->
 					</div>
 
 					<div class="page-content">
-						<!-- /.ace-settings-container -->
-<div class="page-header">
+						<div class="ace-settings-container" id="ace-settings-container">
+							
+
+							
+							 <!-- /.pull-left -->
+							<!-- /.ace-settings-box -->
+						</div><!-- /.ace-settings-container -->
+                        <div class="page-header">
 							<h1>
-								Assign Departmnet Head
+								View Result
 								<small>
-									<i class="ace-icon fa fa-angle-double-right"></i>
-									
+									<!--<i class="ace-icon fa fa-angle-double-right"></i>
+									-->
 								</small>
 							</h1>
 						</div>
@@ -209,199 +306,443 @@
 											<div class="pull-right tableTools-container"></div>
 										</div>
 										<div class="table-header">
-											Department Head details
-											
+											<div align="left">View Result  Attempt-1</div>
 										</div>
-											<br>
-										
+										<br>
+											
 										<!-- div.table-responsive -->
 
 										<!-- div.dataTables_borderWrap -->
 										<div align="center"  >
-<div>
-															<?php
+										
+			
+
+
+<html>
+
+
+
+<body>
+
+<br>
+<?php
 include('db_config.php');
 
-/* $query ="SELECT 
-				lecturers.lec_name  AS lecr_name,
-				
-				department.dep_name AS dept_name FROM lecturers JOIN department ON department.fac_id=lecturers.dept_id "; */
-				
-$query ="SELECT lecturers.lec_name AS lecr_name,department.dep_name AS deprt_name FROM lecturers INNER JOIN department ON department.hd_id=lecturers.id where lecturers.fact_id=(SELECT fac_id FROM faculty_admin where faculty_admin.fac_admin_name='".$_SESSION['sess_username']."')";
-
-
+$query="SELECT qstn_no FROM add_course Where couseid='$sub1'";
 $result=mysql_query($query);
-$i =0;
-
-$query_drop = "SELECT dep_name FROM department where department.fac_id=(SELECT fac_id FROM faculty_admin where faculty_admin.fac_admin_name='".$_SESSION['sess_username']."')";
-$result2=mysql_query($query_drop);
-
-$query_drop2 = "SELECT lec_name FROM lecturers where lecturers.fact_id=(SELECT fac_id FROM faculty_admin where faculty_admin.fac_admin_name='".$_SESSION['sess_username']."')";
-
-$result3=mysql_query($query_drop2);
+$query_row =mysql_fetch_array($result);
+$qstn_no =$query_row['qstn_no'];
+//
+include('db_config.php');
 
 
+$coursename =$_SESSION['coursename'];
+if($qstn_no<=6)
+{
+$query="SELECT st_index,q1,q2,q3,q4,q5,q6 FROM $sub1 WHERE attempt ='1'";
+$result=mysql_query($query);
 
-
-$query_se ="SELECT fac_id FROM signup WHERE username='".$_SESSION['sess_username']."'";
-$result_se =mysql_query($query_se);
-$query_row =mysql_fetch_array($result_se);
-$fac_id =$query_row['fac_id'];
 
 ?>
 
-<form  action="<?php echo $_SERVER['PHP_SELF']; ?>" method="POST" >
-<table id="simple-table" class="table  table-bordered table-hover">
-											<thead>
-  <tr>
-  
-   <th width="400"> <div align="center">Name of Departmnet</div></th>
-    <th width="400"> <div align="center">Name of Head</div></th>
-     <th width="50"> <div align="center">Add</div></th>
-	 
-   
-   
-    
+<div id="printablediv">
 
+<table id="simple-table" class="table  table-bordered table-hover">
+<thead>
+<tr>
+  
+<?php
+   echo '<th width="50"> <div align="center">Index</div></th>';
+   for($i=1;$i<=$qstn_no;$i++)
+   {
+     echo  "<th> ";
+     echo  "Question $i";
+     echo  "</th>";
+    
+   } 
+?>
    
   </tr>
+ 
 
 <?php
 
-while($query_row =mysql_fetch_array($result))
+while($query_row=mysql_fetch_array($result))
    {
-	 
-	   
+	 echo "<tr>";
 	   echo "<td>";
-	   echo '<input type="text" size="50" value ="'.$query_row['deprt_name'].'" name ="fn'.$i.'"/>';
+	   echo $query_row['st_index'];
 	   echo "</td>";
+
+
 	   echo "<td>";
-	   echo '<input type="text" size="50" value ="'.$query_row['lecr_name'].'" name ="fn'.$i.'"/>';
+	   echo $query_row['q1'];
 	   echo "</td>";
-		
-	  
-		
-		echo "<td>";
-	    echo '<input type="hidden" name="check-all'.$i.'" />';
-	    echo "</td>";
-	   
 
-        
-	    
-		
-		echo "</tr>";
-		$i++;
-		 
-	  
-   
-   }
-   echo "<tr>";
-    
-    
+	   echo "<td>";
+	   echo $query_row['q2'];
+	   echo "</td>";
 
-    echo "<td>";
-    echo '<input type ="hidden" name = "txtfn"/>';
-	echo "<select name='dep_name'>";
-		while($row = mysql_fetch_array($result2))
-		{
-			echo "<option value='".$row['dep_name']."'>".$row['dep_name']."</option>";
-		}
-	echo "</select>";	
-	
-	
-	
-    echo "</td>";
-	
-	 echo "<td>";
-    echo '<input type ="hidden" name = "txtfn"/>';
-	echo "<select name='lec_name'>";
-		while($row = mysql_fetch_array($result3))
-		{
-			echo "<option value='".$row['lec_name']."'>".$row['lec_name']."</option>";
-		}
-	echo "</select>";	
-	
-    echo "</td>";
-	
-	
+	   echo "<td>";
+	   echo $query_row['q3'];
+	   echo "</td>";
 
-	
+	   echo "<td>";
+	   echo $query_row['q4'];
+	   echo "</td>";
 
-    
-    echo "<td>";
-    /* echo '<input type ="submit" value ="Add" name ="addbtn"/>'; */
-	echo'<button class="btn btn-white btn-info btn-bold" type ="submit" name ="addbtn">
-												<i class="ace-icon glyphicon glyphicon-plus"></i>
-												
-											</button>';
-									
-    if(isset($_POST['addbtn']))
-    {
-    
-		$f =$_POST['dep_name'];
-		$l =$_POST['lec_name'];
-		//echo $f;
-		//echo $l;
+	   echo "<td>";
+	   echo $query_row['q5'];
+	   echo "</td>";
 
-		$query_id ="SELECT id FROM lecturers WHERE 	lec_name='$l'";
-		$result_id =mysql_query($query_id);
-		 while($query_row =mysql_fetch_array($result_id))
-              {
-                   $id =$query_row['id'];
-              }
-        //echo $id;
-        $query_id1 ="SELECT dep_id FROM department WHERE  dep_name='$f'";
-		$result_id1 =mysql_query($query_id1);
-		 while($query_row =mysql_fetch_array($result_id1))
-              {
-                   $dept_id =$query_row['dep_id'];
-              }	
-             //echo $dept_id;
-    
-        $query_up ="UPDATE department SET 	hd_id='$id' WHERE dep_name='$f' ";
-		$result_up =mysql_query($query_up);
+	   echo "<td>";
+	   echo $query_row['q6'];
+	   echo "</td>";
+
+	   $i++;
+     echo "</tr>";
+	 }		
+
+    echo "</thead>";
+    echo "</table>";
+ }
+ 
+ if($qstn_no>6 &&$qstn_no<=8 )
+ {
+ 	$query="SELECT st_index,q1,q2,q3,q4,q5,q6,q7,q8 FROM $sub1 WHERE attempt ='1'";
+    $result=mysql_query($query);
 
 
-
-        echo $fac_id;
-
-		$query_up1 ="UPDATE signup SET fac_id='$fac_id', dep_id='$dept_id' WHERE name='$l' ";
-		$result_up1 =mysql_query($query_up1);
-
-
-         if($result_up1)
-	             {
-	             
-	             	 echo "<script type='text/javascript'>alert('successfully');window.location = \"fact_hd_assign_dean.php\"</script>";
-	             	
-	             }
-	             else
-	             {
-	             	 echo "<script type='text/javascript'>alert('Error');window.location = \"fact_hd_assign_dean.php\"</script>";
-	             	// echo $r;   	
-	             	                
-	             }
-       
-
-    }
-   
-    echo "</td>";
-
-
-
-   echo "</tr>";
 ?>
-</thead>
-</table>
-</form>
+
+<div id="printablediv">
+
+<table id="simple-table" class="table  table-bordered table-hover">
+<thead>
+<tr>
+  
+<?php
+   echo '<th width="50"> <div align="center">Index</div></th>';
+   for($i=1;$i<=$qstn_no;$i++)
+   {
+     echo  "<th> ";
+     echo  "Question $i";
+     echo  "</th>";
+    
+   } 
+?>
+   
+  </tr>
+ 
+
+<?php
+
+while($query_row=mysql_fetch_array($result))
+   {
+	 echo "<tr>";
+	   echo "<td>";
+	   echo $query_row['st_index'];
+	   echo "</td>";
 
 
-														<hr />
+	   echo "<td>";
+	   echo $query_row['q1'];
+	   echo "</td>";
+
+	   echo "<td>";
+	   echo $query_row['q2'];
+	   echo "</td>";
+
+	   echo "<td>";
+	   echo $query_row['q3'];
+	   echo "</td>";
+
+	   echo "<td>";
+	   echo $query_row['q4'];
+	   echo "</td>";
+
+	   echo "<td>";
+	   echo $query_row['q5'];
+	   echo "</td>";
+
+	   echo "<td>";
+	   echo $query_row['q6'];
+	   echo "</td>";
 
 
+	   echo "<td>";
+	   echo $query_row['q7'];
+	   echo "</td>";
+
+	   echo "<td>";
+	   echo $query_row['q8'];
+	   echo "</td>";
+
+	   $i++;
+     echo "</tr>";
+	 }		
+
+    echo "</thead>";
+    echo "</table>";
+ }
+ 
+?>
+
+
+</div>
+<div class="row hidden-print mt-20">
+                  <div class="col-xs-12 text-right"><a onclick="javascript:printDiv('printablediv')" class="btn btn-primary"><i class="fa fa-print"></i> Print</a></div>
+                </div><br>
+<script language="javascript" type="text/javascript">
+        function printDiv(divID) {
+            //Get the HTML of div
+            var divElements = document.getElementById(divID).innerHTML;
+            //Get the HTML of whole page
+            var oldPage = document.body.innerHTML;
+
+            //Reset the page's HTML with div's HTML only
+            // var coursename =<?php echo $coursename; ?>;
+            document.body.innerHTML = 
+              "<html><head><title></title></head><body>"+
+              'University Of Jaffna'+"<br>"+
+              'Faculty of Science'+"<br>"+'Department of '+'<?php echo $dep_name;?>'+
+              "<br>"+'Course Title : '+'<?php echo $coursename;?>'+"<br>"+"<br>"+
+
+              divElements +Date()+ "</body>";
+
+            //Print Page
+            window.print();
+
+            //Restore orignal HTML
+            document.body.innerHTML = oldPage;
+
+          
+        }
+    </script>
+
+										
+										
+			
+
+
+
+
+	
 										</div>
 									</div>
 								</div>
+
+								
+
+<div class="row">
+									<div class="col-xs-12">
+									
+
+										<div class="clearfix">
+											<div class="pull-right tableTools-container"></div>
+										</div>
+										<div class="table-header">
+											<div align="left">View Result  Repeat</div>
+										</div>
+										<br>
+											
+										<!-- div.table-responsive -->
+
+										<!-- div.dataTables_borderWrap -->
+										<div align="center"  >
+										
+			
+
+
+<html>
+
+
+
+<body>
+
+<br>
+<?php
+include('db_config.php');
+
+$query="SELECT qstn_no FROM add_course Where couseid='$sub1'";
+$result=mysql_query($query);
+$query_row =mysql_fetch_array($result);
+$qstn_no =$query_row['qstn_no'];
+//
+include('db_config.php');
+
+
+
+if($qstn_no<=6)
+{
+$query="SELECT st_index,q1,q2,q3,q4,q5,q6 FROM $sub1 WHERE attempt !='1'";
+$result=mysql_query($query);
+
+
+?>
+
+<div id="printabled">
+<table id="simple-table" class="table  table-bordered table-hover">
+<thead>
+<tr>
+  
+<?php
+   echo '<th width="50"> <div align="center">Index</div></th>';
+   for($i=1;$i<=$qstn_no;$i++)
+   {
+     echo  "<th> ";
+     echo  "Question $i";
+     echo  "</th>";
+    
+   } 
+?>
+   
+  </tr>
+ 
+
+<?php
+
+while($query_row=mysql_fetch_array($result))
+   {
+	 echo "<tr>";
+	   echo "<td>";
+	   echo $query_row['st_index'];
+	   echo "</td>";
+
+
+	   echo "<td>";
+	   echo $query_row['q1'];
+	   echo "</td>";
+
+	   echo "<td>";
+	   echo $query_row['q2'];
+	   echo "</td>";
+
+	   echo "<td>";
+	   echo $query_row['q3'];
+	   echo "</td>";
+
+	   echo "<td>";
+	   echo $query_row['q4'];
+	   echo "</td>";
+
+	   echo "<td>";
+	   echo $query_row['q5'];
+	   echo "</td>";
+
+	   echo "<td>";
+	   echo $query_row['q6'];
+	   echo "</td>";
+
+	   $i++;
+     echo "</tr>";
+	 }		
+     echo "</thead>";
+     echo "</table>";
+  
+ }
+ if($qstn_no>6 &&$qstn_no<=8 )
+ {
+    $query="SELECT st_index,q1,q2,q3,q4,q5,q6,q7,q8 FROM $sub1 WHERE attempt !='1'";
+$result=mysql_query($query);
+
+
+?>
+
+<div id="printabled">
+<table id="simple-table" class="table  table-bordered table-hover">
+<thead>
+<tr>
+  
+<?php
+   echo '<th width="50"> <div align="center">Index</div></th>';
+   for($i=1;$i<=$qstn_no;$i++)
+   {
+     echo  "<th> ";
+     echo  "Question $i";
+     echo  "</th>";
+    
+   } 
+?>
+   
+  </tr>
+ 
+
+<?php
+
+while($query_row=mysql_fetch_array($result))
+   {
+	 echo "<tr>";
+	   echo "<td>";
+	   echo $query_row['st_index'];
+	   echo "</td>";
+
+
+	   echo "<td>";
+	   echo $query_row['q1'];
+	   echo "</td>";
+
+	   echo "<td>";
+	   echo $query_row['q2'];
+	   echo "</td>";
+
+	   echo "<td>";
+	   echo $query_row['q3'];
+	   echo "</td>";
+
+	   echo "<td>";
+	   echo $query_row['q4'];
+	   echo "</td>";
+
+	   echo "<td>";
+	   echo $query_row['q5'];
+	   echo "</td>";
+
+	   echo "<td>";
+	   echo $query_row['q6'];
+	   echo "</td>";
+
+	   echo "<td>";
+	   echo $query_row['q7'];
+	   echo "</td>";
+
+	   echo "<td>";
+	   echo $query_row['q8'];
+	   echo "</td>";
+
+	   $i++;
+     echo "</tr>";
+	 }		
+     echo "</thead>";
+     echo "</table>";
+  
+
+
+
+ }
+?>
+
+
+</div>
+<div class="row hidden-print mt-20">
+                  <div class="col-xs-12 text-right"><a onclick="javascript:printDiv('printabled')" class="btn btn-primary"><i class="fa fa-print"></i> Print</a></div>
+                </div>
+
+
+										
+										
+			
+
+
+
+
+	
+										</div>
+									</div>
+								</div>
+
+
+
 
 								<!-- PAGE CONTENT ENDS -->
 							</div><!-- /.col -->
@@ -420,7 +761,8 @@ while($query_row =mysql_fetch_array($result))
 				<div class="footer-inner">
 					<div class="footer-content">
 						<span class="bigger-120">
-							<span class="blue bolder">University of Jaffna</span> &copy; 2016-2017
+							<span class="blue bolder">University of Jaffna</span>
+							Department of Computer Science &copy; 2016-2017
 						</span>
 
 						&nbsp; &nbsp;

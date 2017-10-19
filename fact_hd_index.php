@@ -3,6 +3,7 @@
     $role = $_SESSION['sess_userrole'];
     if(!isset($_SESSION['sess_username']) && $role!="admin"){
       header('Location: login.php?err=2');
+
     }
 ?>
 
@@ -66,21 +67,14 @@
 				</button>
 
 				<div class="navbar-header pull-left">
-					<a href="admin_index.php" class="navbar-brand">
+					<a href="fact_hd_index.php" class="navbar-brand">
 						<small>
 							<?php echo $_SESSION['sess_username'];
-							/* $query_fac = "SELECT fac_name FROM faculty where faculty.fac_id=(SELECT fac_id FROM faculty_admin where faculty_admin.fac_admin_name='".$_SESSION['sess_username']."')"; */
-/* 							
-							$query_fac ="SELECT fac_name FROM faculty where fac_id=(SELECT fac_id FROM signup WHERE signup.fac_admin_name='".$_SESSION['sess_username']."')";
-							$result_fac=mysql_query($query_fac);
 							
-							$x =mysql_fetch_array($result_fac)
-							
-							   */
 							 
 							?>
 							
- | University Of Jaffna
+                         | University Of Jaffna
 						</small>
 					</a>
 				</div>
@@ -106,15 +100,7 @@
 							<ul class="user-menu dropdown-menu-right dropdown-menu dropdown-yellow dropdown-caret dropdown-close">
 								
 
-								<li>
-									<a href="profile.html">
-										<i class="ace-icon fa fa-user"></i>
-										Profile
-									</a>
-								</li>
-
-								<li class="divider"></li>
-
+								
 								<li>
 									<a href="logout.php">
 										<i class="ace-icon fa fa-power-off"></i>
@@ -153,15 +139,6 @@
 					</li>
 					
 					
-					
-					<li class="">
-						<a href="fact_add_student.php">
-							
-							<span class="menu-text">Add Student Details</span>
-						</a>
-
-						<b class="arrow"></b>
-					</li>
 					<li class="">
 						<a href="fact_hd_assign_dean.php">
 							
@@ -170,15 +147,7 @@
 
 						<b class="arrow"></b>
 					</li>
-					<li class="">
-						<a href="fact_hd_intfact_course.php">
-							
-							<span class="menu-text">Add Inter-Faculty Course</span><br>
-							
-						</a>
-
-						<b class="arrow"></b>
-					</li>
+					
 					
 					<li class="">
 						<a href="fact_hd_asgn_lec.php" >
@@ -187,7 +156,7 @@
 
 							
 						</a>
-					</li><br>
+					</li>
 					
 					
 					<li class="">
@@ -216,14 +185,7 @@
 							
 						</ul><!-- /.breadcrumb -->
 
-						<div class="nav-search" id="nav-search">
-							<form class="form-search">
-								<span class="input-icon">
-									<input type="text" placeholder="Search ..." class="nav-search-input" id="nav-search-input" autocomplete="off" />
-									<i class="ace-icon fa fa-search nav-search-icon"></i>
-								</span>
-							</form>
-						</div><!-- /.nav-search -->
+						<!-- /.nav-search -->
 					</div>
 
 					<div class="page-content">
@@ -269,28 +231,31 @@
 <br>
 <?php
 include('db_config.php');
+ 
+ $query ="SELECT fac_id FROM signup WHERE 	username='".$_SESSION['sess_username']."'";
+ $result =mysql_query($query);
+ $query_row =mysql_fetch_array($result);
+$fac_id =$query_row['fac_id'];
 
 
-$query2 = "SELECT fac_id FROM faculty_admin where faculty_admin.fac_admin_name='".$_SESSION['sess_username']."'";
-$result2=mysql_query($query2);
+
+$query_se ="SELECT 	* FROM department WHERE fac_id='$fac_id'";
+$result_se =mysql_query($query_se);
+//echo $fac_id;
+
+//$query2 = "SELECT fac_id FROM faculty_admin where faculty_admin.fac_admin_name='".$_SESSION['sess_username']."'";
+//$result2=mysql_query($query2);
 
 
-$query ="SELECT * FROM department where department.fac_id=(SELECT fac_id FROM faculty_admin where faculty_admin.fac_admin_name='".$_SESSION['sess_username']."')";
-$result=mysql_query($query);
+//$query ="SELECT * FROM department where department.fac_id=(SELECT fac_id FROM faculty_admin where faculty_admin.fac_admin_name='".$_SESSION['sess_username']."')";
+//$result=mysql_query($query);
 $i =0;
 
 
-$query_depid="SELECT fac_id FROM faculty_admin where fac_admin_name='".$_SESSION['sess_username']."'";
-$result_depid=mysql_query($query_depid);
-$name=mysql_fetch_object($result_depid);
-
-$facid_query="SELECT fac_id FROM signup WHERE signup.fac_id=(SELECT fac_id FROM faculty_admin where faculty_admin.fac_admin_name='".$_SESSION['sess_username']."')";
-$facid_result=mysql_query($facid_query) or die(mysql_error()); 
- $row = mysql_fetch_array($facid_result) or die(mysql_error());
+//$query_depid="SELECT fac_id FROM faculty_admin where fac_admin_name='".$_SESSION['sess_username']."'";
+//$result_depid=mysql_query($query_depid);
+//$name=mysql_fetch_object($result_depid);
 ?>
-
-
-
 
 
 <form  action="<?php echo $_SERVER['PHP_SELF']; ?>" method="POST" >
@@ -311,28 +276,18 @@ $facid_result=mysql_query($facid_query) or die(mysql_error());
 
 <?php
 
-while($query_row =mysql_fetch_array($result))
+while($query_row=mysql_fetch_array($result_se))
    {
 	 
-	   
-
-
-	  
-
-	   
-	   
-	    echo "<td>";
+	   echo "<td>";
 	   echo '<input type="text" size="60" value ="'.$query_row['dep_name'].'" name ="fn'.$i.'"/>';
 	   echo "</td>";
 		
-			echo "<td>";
+	    echo "<td>";
 	    echo '<input type="checkbox" name="check-all'.$i.'" />';
 	    echo "</td>";
-	   
- 
-       
-
-echo "<td>";
+	  
+        echo "<td>";
 	    
 		
 		 echo '<button class="btn btn-white btn-default btn-round" name ="updatebtn'.$i.'" >
@@ -349,11 +304,11 @@ echo "<td>";
 	    	if(isset($_POST['check-all'.$i.'']))
 	    	{
 
-               $r =$query_row['coursename'];
+               $r =$query_row['dep_id'];
                $f =$_POST['fn'.$i.''];
         
 
-                $query ="UPDATE add_course SET coursename ='$f'  WHERE courseid ='$r'";
+                $query ="UPDATE department SET dep_name ='$f'  WHERE dep_id='$r'";
 	   
 	             $result =mysql_query($query);
 	             if(!$result)
@@ -393,11 +348,12 @@ echo "<td>";
 	    {
 	    	if(isset($_POST['check-all'.$i.'']))
 	    	{
-                $f =$_POST['fn'.$i.''];
-             
-                 $query ="DELETE FROM departmnet WHERE dep_name ='".$f."'";
+                  $r =$query_row['dep_id'];
+
+                 include('db_config.php');
+                 $query ="DELETE FROM department WHERE dep_id='$r'";
 	   
-	             $result =mysql_query($query);
+	             $result =mysql_query($query)or die(mysql_error());
 	             if($result)
 	             {
 					 
@@ -435,14 +391,9 @@ echo "<td>";
     
 
     echo "<td>";
-    echo '<input type ="text" name = "txtfn"/>';
+    echo '<input type ="text" size ="60" name = "txtfn"/>';
     echo "</td>";
 	
-	echo "<td><?php echo   $name->fac_id;  ?></td>";
-   
-
-
-
     
     echo "<td>";
     /* echo '<input type ="submit" value ="Add" name ="addbtn"/>'; */
@@ -450,28 +401,27 @@ echo "<td>";
 												<i class="ace-icon glyphicon glyphicon-plus"></i>
 												
 											</button>';
-											
-											
-											
-											
-											
-
+	
     if(isset($_POST['addbtn']))
     {
-    
+         
+         
 		$f =$_POST['txtfn'];
-		$q =$row['fac_id'];
 
-        if(!$f )
+		$null =0;
+		//echo $fac_id ;
+       
+		
+        if(!$f)
         {
         	echo "<script type='text/javascript'>alert('Fill all details')</script>";
         }
         else
         {
 
-        	$query ="INSERT INTO department (dep_name,fac_id ) VALUES ('$f','$q' )";
+        	$query ="INSERT INTO department (dep_name,fac_id,hd_id) VALUES ('$f','$fac_id','$null')";
 	   
-	        $result =mysql_query($query);
+	        $result =mysql_query($query)or die(mysql_error());
 	         if(!$result)
 	             {
 	          

@@ -66,7 +66,7 @@
 				</button>
 
 				<div class="navbar-header pull-left">
-					<a href="admin_index.php" class="navbar-brand">
+					<a href="dept_hd_academic_year.php" class="navbar-brand">
 						<small>
 							<?php echo $_SESSION['sess_username'];?>
  | University Of Jaffna
@@ -95,14 +95,6 @@
 							<ul class="user-menu dropdown-menu-right dropdown-menu dropdown-yellow dropdown-caret dropdown-close">
 								
 
-								<li>
-									<a href="profile.html">
-										<i class="ace-icon fa fa-user"></i>
-										Profile
-									</a>
-								</li>
-
-								<li class="divider"></li>
 
 								<li>
 									<a href="logout.php">
@@ -134,12 +126,13 @@
 					<li class="">
 						<a href="dept_hd_academic_year.php">
 							
-							<span class="menu-text">Add Accademic Year</span>
+							<span class="menu-text">Add Academic Year</span>
 						</a>
 
 						<b class="arrow"></b>
 					</li>
 					<li class="">
+
 						<a href="dept_hd_index.php">
 							
 							<span class="menu-text">Add Course</span>
@@ -177,7 +170,7 @@
 					<li class="">
 						<a href="dept_hd_custom1.php">
 							
-							<span class="menu-text">Default Evalution Method</span><br>
+							<span class="menu-text">Custom Evalution Method</span><br>
 							
 						</a>
 
@@ -194,7 +187,7 @@
 						<b class="arrow"></b>
 					</li>
 					
-					<br>
+					
 					
 					
 					
@@ -225,14 +218,7 @@
 							
 						</ul><!-- /.breadcrumb -->
 
-						<div class="nav-search" id="nav-search">
-							<form class="form-search">
-								<span class="input-icon">
-									<input type="text" placeholder="Search ..." class="nav-search-input" id="nav-search-input" autocomplete="off" />
-									<i class="ace-icon fa fa-search nav-search-icon"></i>
-								</span>
-							</form>
-						</div><!-- /.nav-search -->
+						<!-- /.nav-search -->
 					</div>
 
 					<div class="page-content">
@@ -279,9 +265,14 @@
 <?php
 include('db_config.php');
 
-$query ="SELECT obj FROM evaluation_object WHERE evaluation_object.dep_id=(SELECT dep_id FROM signup where signup.username='".$_SESSION['sess_username']."')";
+$query_se ="SELECT dep_id FROM signup  WHERE username ='".$_SESSION['sess_username']."'";
+$result_se =mysql_query($query_se);
+$query_row1 =mysql_fetch_array($result_se);
+$dep_id =$query_row1['dep_id'];
+
+$query ="SELECT * FROM evaluation_object WHERE dep_id ='$dep_id'";	
 $result=mysql_query($query);
-$i =0;
+$i =1;
 
 ?>
 
@@ -305,16 +296,12 @@ $i =0;
 while($query_row =mysql_fetch_array($result))
    {
 	 
-	   
-
-
 	  
-
 	   echo "<td>";
 	   echo '<input type="text" value ="'.$query_row['obj'].'" name ="fn'.$i.'"/>';
 	   echo "</td>";
 		
-			echo "<td>";
+		echo "<td>";
 	    echo '<input type="checkbox" name="check-all'.$i.'" />';
 	    echo "</td>";
 	   
@@ -340,9 +327,11 @@ echo "<td>";
 
                $r =$query_row['id'];
                $f =$_POST['fn'.$i.''];
+               
+              
         
 
-                $query ="UPDATE ac_year SET year ='$f'  WHERE id ='$r'";
+                $query ="UPDATE evaluation_object SET obj='$f'  WHERE id='$r'";
 	   
 	             $result =mysql_query($query);
 	             if(!$result)
@@ -382,9 +371,9 @@ echo "<td>";
 	    {
 	    	if(isset($_POST['check-all'.$i.'']))
 	    	{
-                $f =$_POST['fn'.$i.''];
+                 $f =$query_row['id'];
              
-                 $query ="DELETE FROM ac_year WHERE year ='".$f."'";
+                 $query ="DELETE FROM evaluation_object WHERE id='".$f."'";
 	   
 	             $result =mysql_query($query);
 	             if($result)
@@ -446,14 +435,14 @@ echo "<td>";
     
 		$f =$_POST['txtfn'];
 
-        if(!$f   )
+        if(!$f )
         {
         	echo "<script type='text/javascript'>alert('Fill all details')</script>";
         }
         else
         {
 
-        	$query ="INSERT INTO ac_year (year ) VALUES ('$f' )";
+        	$query ="INSERT INTO  evaluation_object (dep_id,obj) VALUES ('$dep_id','$f')";
 	   
 	        $result =mysql_query($query);
 	         if(!$result)

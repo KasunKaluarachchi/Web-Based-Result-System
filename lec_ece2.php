@@ -5,16 +5,14 @@
       header('Location: login.php?err=2');
     }
 ?>
-
-
 <!DOCTYPE html>
 <html lang="en">
 	<head>
 		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
 		<meta charset="utf-8" />
-		<title>Tables - Ace Admin</title>
+		<title>Form Wizard - Ace Admin</title>
 
-		<meta name="description" content="Static &amp; Dynamic Tables" />
+		<meta name="description" content="and Validation" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
 
 		<!-- bootstrap & fontawesome -->
@@ -22,6 +20,7 @@
 		<link rel="stylesheet" href="assets/font-awesome/4.5.0/css/font-awesome.min.css" />
 
 		<!-- page specific plugin styles -->
+		<link rel="stylesheet" href="assets/css/select2.min.css" />
 
 		<!-- text fonts -->
 		<link rel="stylesheet" href="assets/css/fonts.googleapis.com.css" />
@@ -66,10 +65,10 @@
 				</button>
 
 				<div class="navbar-header pull-left">
-					<a href="fact_hd_index.php" class="navbar-brand">
+					<a href="index.html" class="navbar-brand">
 						<small>
-							<?php echo $_SESSION['sess_username'];?>| University Of Jaffna
-							
+							Lecturer | Dr. X
+								<?php echo $_SESSION['sess_username'];?>
 						</small>
 					</a>
 				</div>
@@ -77,14 +76,14 @@
 				<div class="navbar-buttons navbar-header pull-right" role="navigation">
 					<ul class="nav ace-nav">
 						<!--  -->
-                         
+
 						
 
 						
 
 						<li class="light-blue dropdown-modal">
 							<a data-toggle="dropdown" href="#" class="dropdown-toggle">
-								
+								<img class="nav-user-photo" src="assets/images/avatars/avatar2.png" alt="Jason's Photo" />
 								<span class="user-info">
 									
 								</span>
@@ -95,12 +94,19 @@
 							<ul class="user-menu dropdown-menu-right dropdown-menu dropdown-yellow dropdown-caret dropdown-close">
 								
 
-								
+								<li>
+									<a href="profile.html">
+										<i class="ace-icon fa fa-user"></i>
+										Profile
+									</a>
+								</li>
+
+								<li class="divider"></li>
+
 								<li>
 									<a href="logout.php">
 										<i class="ace-icon fa fa-power-off"></i>
 										Logout
-										
 									</a>
 								</li>
 							</ul>
@@ -120,48 +126,90 @@
 					try{ace.settings.loadState('sidebar')}catch(e){}
 				</script>
 
-				<!-- /.sidebar-shortcuts -->
+				
 
 				<ul class="nav nav-list">
 					
+
 					<li class="">
-						<a href="fact_hd_index.php">
+						<a href="lec_ex_type.php" >
 							
-							<span class="menu-text">Add Department</span>
+							<span class="menu-text">
+								Select Exam Format
+							</span>
+
+							
 						</a>
 
 						<b class="arrow"></b>
-					</li>
-					
-					
-					<li class="active">
-						<a href="fact_hd_assign_dean.php">
-							
-							<span class="menu-text">Assign Department Head</span>
-						</a>
 
-						<b class="arrow"></b>
-					</li>
-					
-					
-					<li class="">
-						<a href="fact_hd_asgn_lec.php" >
 						
-							<span class="menu-text">Assign Lecturer</span>
+								</a>
+								
+							
+						
+					</li>
+					
+					<li class="">
+						<a href="lec_ica.php" >
+							
+							<span class="menu-text">
+								Add ICA Marks
+							</span>
 
 							
 						</a>
+
+						<b class="arrow"></b>
+
+						
+								
+								</a>
+						
 					</li>
 					
-					
 					<li class="">
-						<a href="fact_hd_change_password.php">
+						<a href="lec_ece.php" >
+							
+							<span class="menu-text">
+								Add ECE Marks
+							</span>
+
+							
+						</a>
+
+						<b class="arrow"></b>
+
+						
+								
+								</a>
+								
+							
+					</li>
+
+					<li class="">
+						<a href="lec_index.php">
+							
+
+							<span class="menu-text">
+								Change course
+
+								
+							</span>
+						</a>
+
+						<b class="arrow"></b>
+					</li>
+					<li class="">
+						<a href="lec_change_password.php">
 						
 							<span class="menu-text">Change Passwords</span>
 						</a>
 
 						<b class="arrow"></b>
 					</li>
+					
+
 					
 				</ul><!-- /.nav-list -->
 
@@ -174,23 +222,29 @@
 				<div class="main-content-inner">
 					<div class="breadcrumbs ace-save-state" id="breadcrumbs">
 						<ul class="breadcrumb">
-							
-
-							
-							
+							<li class="active"><h4>Level-1S/1G | 2015/2016 | CSC111GC3 | Foundation of Computer Science</h4></li>
 						</ul><!-- /.breadcrumb -->
 
-						<!-- /.nav-search -->
+						<div class="nav-search" id="nav-search">
+							<form class="form-search">
+								<span class="input-icon">
+									<input type="text" placeholder="Search ..." class="nav-search-input" id="nav-search-input" autocomplete="off" />
+									<i class="ace-icon fa fa-search nav-search-icon"></i>
+								</span>
+							</form>
+						</div><!-- /.nav-search -->
 					</div>
 
 					<div class="page-content">
-						<!-- /.ace-settings-container -->
+						<div class="ace-settings-container" id="ace-settings-container">
+							
+						</div><!-- /.ace-settings-container -->
 <div class="page-header">
 							<h1>
-								Assign Departmnet Head
+								Course
 								<small>
 									<i class="ace-icon fa fa-angle-double-right"></i>
-									
+									Add ECE Marks
 								</small>
 							</h1>
 						</div>
@@ -209,196 +263,206 @@
 											<div class="pull-right tableTools-container"></div>
 										</div>
 										<div class="table-header">
-											Department Head details
-											
+											Add ECE Marks
 										</div>
-											<br>
-										
+
 										<!-- div.table-responsive -->
 
 										<!-- div.dataTables_borderWrap -->
-										<div align="center"  >
-<div>
-															<?php
-include('db_config.php');
+										<div>
+										
+										
+			
 
-/* $query ="SELECT 
-				lecturers.lec_name  AS lecr_name,
-				
-				department.dep_name AS dept_name FROM lecturers JOIN department ON department.fac_id=lecturers.dept_id "; */
-				
-$query ="SELECT lecturers.lec_name AS lecr_name,department.dep_name AS deprt_name FROM lecturers INNER JOIN department ON department.hd_id=lecturers.id where lecturers.fact_id=(SELECT fac_id FROM faculty_admin where faculty_admin.fac_admin_name='".$_SESSION['sess_username']."')";
-
-
-$result=mysql_query($query);
-$i =0;
-
-$query_drop = "SELECT dep_name FROM department where department.fac_id=(SELECT fac_id FROM faculty_admin where faculty_admin.fac_admin_name='".$_SESSION['sess_username']."')";
-$result2=mysql_query($query_drop);
-
-$query_drop2 = "SELECT lec_name FROM lecturers where lecturers.fact_id=(SELECT fac_id FROM faculty_admin where faculty_admin.fac_admin_name='".$_SESSION['sess_username']."')";
-
-$result3=mysql_query($query_drop2);
-
-
-
-
-$query_se ="SELECT fac_id FROM signup WHERE username='".$_SESSION['sess_username']."'";
-$result_se =mysql_query($query_se);
-$query_row =mysql_fetch_array($result_se);
-$fac_id =$query_row['fac_id'];
-
-?>
-
-<form  action="<?php echo $_SERVER['PHP_SELF']; ?>" method="POST" >
-<table id="simple-table" class="table  table-bordered table-hover">
-											<thead>
-  <tr>
-  
-   <th width="400"> <div align="center">Name of Departmnet</div></th>
-    <th width="400"> <div align="center">Name of Head</div></th>
-     <th width="50"> <div align="center">Add</div></th>
-	 
-   
-   
-    
-
-   
-  </tr>
 
 <?php
+$objConnect = mysql_connect("localhost","root","") or die("Error Connect to Database");
+$objDB = mysql_select_db("exam_result");
 
-while($query_row =mysql_fetch_array($result))
-   {
-	 
-	   
-	   echo "<td>";
-	   echo '<input type="text" size="50" value ="'.$query_row['deprt_name'].'" name ="fn'.$i.'"/>';
-	   echo "</td>";
-	   echo "<td>";
-	   echo '<input type="text" size="50" value ="'.$query_row['lecr_name'].'" name ="fn'.$i.'"/>';
-	   echo "</td>";
+//*** Add Condition ***//
+if(isset($_POST["hdnCmd"]))
+	{
+	if($_POST["hdnCmd"] == "Add")
+{
+	
+	
+	$strSQL = "INSERT INTO add_ece ";
+	$strSQL .="(courseid,coursename,level) ";
+	$strSQL .="VALUES ";
+	$strSQL .="('".$_POST["txtAddcourseid"]."','".$_POST["txtAddcoursename"]."' ";
+	$strSQL .=",'".$_POST["txtAddlevel"]."') ";
+	
+	$objQuery = mysql_query($strSQL);
+	if(!$objQuery)
+	{
+		echo "Error Save [".mysql_error()."]";
+	}
+	/* header("location:$_SERVER[PHP_SELF]");
+	exit(); */
+}
+	}
+
+//*** Update Condition ***//
+if(isset($_POST["hdnCmd"]))
+	{
+if($_POST["hdnCmd"] == "Update")
+{
+	$strSQL = "UPDATE add_course SET ";
+	$strSQL .="courseid = '".$_POST["txtEditcourseid"]."' ";
+	$strSQL .=",coursename = '".$_POST["txtEditcoursename"]."' ";
+	$strSQL .=",level = '".$_POST["txtEditlevel"]."' ";
+	
+	$strSQL .="WHERE courseid = '".$_POST["hdnEditcourseid"]."' ";
+	$objQuery = mysql_query($strSQL);
+	if(!$objQuery)
+	{
+		echo "Error Update [".mysql_error()."]";
+	}
+	/* header("location:$_SERVER[PHP_SELF]");
+	exit(); */
+}
+	}
+//*** Delete Condition ***//
+if(isset($_GET["Action"]))
+	{
 		
-	  
+if($_GET["Action"] == "Del")
+{
+	$strSQL = "DELETE FROM add_course ";
 		
-		echo "<td>";
-	    echo '<input type="hidden" name="check-all'.$i.'" />';
-	    echo "</td>";
-	   
-
-        
-	    
+	$strSQL .="WHERE courseid = '".$_GET["CusID"]."' ";
 		
-		echo "</tr>";
-		$i++;
-		 
-	  
-   
-   }
-   echo "<tr>";
-    
-    
-
-    echo "<td>";
-    echo '<input type ="hidden" name = "txtfn"/>';
-	echo "<select name='dep_name'>";
-		while($row = mysql_fetch_array($result2))
-		{
-			echo "<option value='".$row['dep_name']."'>".$row['dep_name']."</option>";
-		}
-	echo "</select>";	
-	
-	
-	
-    echo "</td>";
-	
-	 echo "<td>";
-    echo '<input type ="hidden" name = "txtfn"/>';
-	echo "<select name='lec_name'>";
-		while($row = mysql_fetch_array($result3))
-		{
-			echo "<option value='".$row['lec_name']."'>".$row['lec_name']."</option>";
-		}
-	echo "</select>";	
-	
-    echo "</td>";
-	
-	
-
-	
-
-    
-    echo "<td>";
-    /* echo '<input type ="submit" value ="Add" name ="addbtn"/>'; */
-	echo'<button class="btn btn-white btn-info btn-bold" type ="submit" name ="addbtn">
-												<i class="ace-icon glyphicon glyphicon-plus"></i>
-												
-											</button>';
-									
-    if(isset($_POST['addbtn']))
-    {
-    
-		$f =$_POST['dep_name'];
-		$l =$_POST['lec_name'];
-		//echo $f;
-		//echo $l;
-
-		$query_id ="SELECT id FROM lecturers WHERE 	lec_name='$l'";
-		$result_id =mysql_query($query_id);
-		 while($query_row =mysql_fetch_array($result_id))
-              {
-                   $id =$query_row['id'];
-              }
-        //echo $id;
-        $query_id1 ="SELECT dep_id FROM department WHERE  dep_name='$f'";
-		$result_id1 =mysql_query($query_id1);
-		 while($query_row =mysql_fetch_array($result_id1))
-              {
-                   $dept_id =$query_row['dep_id'];
-              }	
-             //echo $dept_id;
-    
-        $query_up ="UPDATE department SET 	hd_id='$id' WHERE dep_name='$f' ";
-		$result_up =mysql_query($query_up);
-
-
-
-        echo $fac_id;
-
-		$query_up1 ="UPDATE signup SET fac_id='$fac_id', dep_id='$dept_id' WHERE name='$l' ";
-		$result_up1 =mysql_query($query_up1);
-
-
-         if($result_up1)
-	             {
-	             
-	             	 echo "<script type='text/javascript'>alert('successfully');window.location = \"fact_hd_assign_dean.php\"</script>";
-	             	
-	             }
-	             else
-	             {
-	             	 echo "<script type='text/javascript'>alert('Error');window.location = \"fact_hd_assign_dean.php\"</script>";
-	             	// echo $r;   	
-	             	                
-	             }
-       
-
-    }
-   
-    echo "</td>";
-
-
-
-   echo "</tr>";
+	$objQuery = mysql_query($strSQL);
+	if(!$objQuery)
+	{
+		echo "Error Delete [".mysql_error()."]";
+	}
+	/* header("location:$_SERVER[PHP_SELF]");
+	exit() */;
+}
+	}
+$strSQL = "SELECT * FROM add_ece";
+$objQuery = mysql_query($strSQL) or die ("Error Query [".$strSQL."]");
 ?>
-</thead>
+<form name="frmMain" method="post" action="<?php echo $_SERVER["PHP_SELF"];?>">
+<input type="hidden" name="hdnCmd" value="">
+
+
+
+<table id="dynamic-table" class="table table-striped table-bordered table-hover">
+
+  <tr>
+    <th width="91"> <div align="center">Index Number</div></th>
+    <th width="98"> <div align="center">Registration Number </div></th>
+    
+	<th width="91"> <div align="center">Question 01</div></th>
+    <th width="98"> <div align="center">Question 02</div></th>
+    <th width="91"> <div align="center">Question 03</div></th>
+	<th width="91"> <div align="center">Question 04</div></th>
+    <th width="98"> <div align="center">Question 05</div></th>
+    <th width="91"> <div align="center">Question 06</div></th>
+	<th width="91"> <div align="center">Question 07</div></th>
+    <th width="98"> <div align="center">Question 08</div></th>
+    <th width="91"> <div align="center">Final Marks</div></th>
+    <span class="green">
+    <th width="10"> <div align="center"><a class="green" href="#"><i class="ace-icon fa fa-pencil bigger-130"></i></a> </div></th></span>
+    <th width="10"> <div align="center"><a class="red" href="#"><i class="ace-icon fa fa-trash-o bigger-120"></i></a> </div></th>
+  
+  
+<?php
+while($objResult = mysql_fetch_array($objQuery))
+{
+?>
+
+  <?php
+		if(isset($_GET["CusID"]))
+		{
+			if(isset($_GET["Action"]))
+			{
+	if($objResult["courseid"] == $_GET["CusID"] and $_GET["Action"] == "Edit")
+	{
+  ?>
+  <tr>
+    <td><div align="center">
+		<input type="text" name="txtEditcourseid" size="5" value="<?php echo $objResult["courseid"];?>">
+		<input type="hidden" name="hdnEditcourseid" size="5" value="<?php echo $objResult["courseid"];?>">
+	</div></td>
+    <td><input type="text" name="txtEditcoursename" size="20" value="<?php echo $objResult["coursename"];?>"></td>
+    <td><input type="text" name="txtEditlevel" size="20" value="<?php echo $objResult["level"];?>"></td>
+    
+    <td colspan="2" align="right"><div align="center">
+      <input name="btnAdd" type="button" id="btnUpdate" value="Update" OnClick="frmMain.hdnCmd.value='Update';frmMain.submit();">
+	  <input name="btnAdd" type="button" id="btnCancel" value="Cancel" OnClick="window.location='<?php echo $_SERVER["PHP_SELF"];?>';">
+    </div></td>
+  </tr>
+  <?php
+	}
+			}
+	   }
+  else
+	{
+  ?>
+  <tr>
+    <td><div align="center"><?php echo $objResult["index_no"];?></div></td>
+    <td><?php echo $objResult["reg_no"];?></td>
+    
+	 <td><?php echo $objResult["q1"];?></td>
+    <td><?php echo $objResult["q2"];?></td>
+	 <td><?php echo $objResult["q3"];?></td>
+    <td><?php echo $objResult["q4"];?></td>
+	 <td><?php echo $objResult["q5"];?></td>
+    <td><?php echo $objResult["q6"];?></td>
+	 <td><?php echo $objResult["q7"];?></td>
+    <td><?php echo $objResult["q8"];?></td>
+	<td><?php echo $objResult["final"];?></td>
+    
+    <td align="center"><a href="<?php echo $_SERVER["PHP_SELF"];?>?Action=Edit&CusID=<?php echo $objResult["courseid"];?>">Edit</a></td>
+	<td align="center"><a href="JavaScript:if(confirm('Confirm Delete?')==true){window.location='<?php echo $_SERVER["PHP_SELF"];?>?Action=Del&CusID=<?php echo $objResult["courseid"];?>';}">Delete</a></td>
+  </tr>
+  <?php
+	}
+  ?>
+<?php
+}
+?>
+  <tr>
+    <td><div align="center"><input type="text" name="txtAddcourseid" size="3"></div></td>
+    <td><input type="text" name="txtAddcoursename" size="5" ></td>
+    
+	<td><input type="text" name="txtAddcoursename" size="3" ></td>
+    <td><input type="text" name="txtAddcoursename" size="3" ></td>
+	<td><input type="text" name="txtAddcoursename" size="3" ></td>
+    <td><input type="text" name="txtAddcoursename" size="3" ></td>
+	<td><input type="text" name="txtAddcoursename" size="3" ></td>
+    <td><input type="text" name="txtAddcoursename" size="3" ></td>
+	<td><input type="text" name="txtAddcoursename" size="3" ></td>
+    <td><input type="text" name="txtAddcoursename" size="3" ></td>
+	<td><input type="text" name="txtAddcoursename" size="3" ></td>
+    
+    
+    <td colspan="2" align="right"><div align="center">
+      <input name="btnAdd"  button class="btn btn-xs btn-info" size="3"
+																i class="ace-icon fa fa-pencil bigger-120"
+															  value="Add" OnClick="frmMain.hdnCmd.value='Add';frmMain.submit();">
+    </div></td>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+  </tr>
+  </tr>
+  
 </table>
 </form>
-
-
-														<hr />
-
-
+<?php
+mysql_close($objConnect);
+?>
+	
 										</div>
 									</div>
 								</div>
@@ -420,7 +484,8 @@ while($query_row =mysql_fetch_array($result))
 				<div class="footer-inner">
 					<div class="footer-content">
 						<span class="bigger-120">
-							<span class="blue bolder">University of Jaffna</span> &copy; 2016-2017
+							<span class="blue bolder">University of Jaffna</span>
+							Department of Computer Science &copy; 2016-2017
 						</span>
 
 						&nbsp; &nbsp;

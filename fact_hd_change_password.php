@@ -66,21 +66,9 @@
 				</button>
 
 				<div class="navbar-header pull-left">
-					<a href="admin_index.php" class="navbar-brand">
+					<a href="fact_hd_index.php" class="navbar-brand">
 						<small>
-							<?php echo $_SESSION['sess_username'];
-							/* $query_fac = "SELECT fac_name FROM faculty where faculty.fac_id=(SELECT fac_id FROM faculty_admin where faculty_admin.fac_admin_name='".$_SESSION['sess_username']."')"; */
-/* 							
-							$query_fac ="SELECT fac_name FROM faculty where fac_id=(SELECT fac_id FROM signup WHERE signup.fac_admin_name='".$_SESSION['sess_username']."')";
-							$result_fac=mysql_query($query_fac);
-							
-							$x =mysql_fetch_array($result_fac)
-							
-							   */
-							 
-							?>
-							
- | University Of Jaffna
+							<?php echo $_SESSION['sess_username'];?>| University Of Jaffna
 						</small>
 					</a>
 				</div>
@@ -89,15 +77,11 @@
 					<ul class="nav ace-nav">
 						<!--  -->
                          
-						
-
-						
-
 						<li class="light-blue dropdown-modal">
 							<a data-toggle="dropdown" href="#" class="dropdown-toggle">
 								
 								<span class="user-info">
-									
+								
 								</span>
 
 								<i class="ace-icon fa fa-caret-down"></i>
@@ -105,16 +89,7 @@
 
 							<ul class="user-menu dropdown-menu-right dropdown-menu dropdown-yellow dropdown-caret dropdown-close">
 								
-
-								<li>
-									<a href="profile.html">
-										<i class="ace-icon fa fa-user"></i>
-										Profile
-									</a>
-								</li>
-
-								<li class="divider"></li>
-
+                            
 								<li>
 									<a href="logout.php">
 										<i class="ace-icon fa fa-power-off"></i>
@@ -154,14 +129,7 @@
 					
 					
 					
-					<li class="">
-						<a href="fact_add_student.php">
-							
-							<span class="menu-text">Add Student Details</span>
-						</a>
-
-						<b class="arrow"></b>
-					</li>
+				
 					<li class="">
 						<a href="fact_hd_assign_dean.php">
 							
@@ -170,15 +138,7 @@
 
 						<b class="arrow"></b>
 					</li>
-					<li class="">
-						<a href="fact_hd_intfact_course.php">
-							
-							<span class="menu-text">Add Inter-Faculty Course</span><br>
-							
-						</a>
-
-						<b class="arrow"></b>
-					</li>
+					
 					
 					<li class="">
 						<a href="fact_hd_asgn_lec.php" >
@@ -187,7 +147,7 @@
 
 							
 						</a>
-					</li><br>
+					</li>
 					
 					
 					<li class="active">
@@ -216,14 +176,7 @@
 							
 						</ul><!-- /.breadcrumb -->
 
-						<div class="nav-search" id="nav-search">
-							<form class="form-search">
-								<span class="input-icon">
-									<input type="text" placeholder="Search ..." class="nav-search-input" id="nav-search-input" autocomplete="off" />
-									<i class="ace-icon fa fa-search nav-search-icon"></i>
-								</span>
-							</form>
-						</div><!-- /.nav-search -->
+						<!-- /.nav-search -->
 					</div>
 
 					<div class="page-content">
@@ -312,15 +265,10 @@ dd input {
 	<fieldset>
 		
 	<?php 
-		$conn_db = mysql_connect("localhost","root","") or die();
-		$sel_db = mysql_select_db("exam_result",$conn_db) or die();
-		if(isset($_POST['re_password']))
-		{
-		$old_pass1=$_POST['old_pass'];
-		$new_pass1=$_POST['new_pass'];
-		$re_pass1=$_POST['re_pass'];
+		//$conn_db = mysql_connect("localhost","root","") or die();
+		//$sel_db = mysql_select_db("exam_result",$conn_db) or die();
+	    include('db_config.php');
 		
-		$old_pass=md5($old_pass1);
 		
 		
 		
@@ -328,31 +276,47 @@ dd input {
 	require_once 'db_config.php';
 
 	// if session is not set this will redirect to login page
-	if( !isset($_SESSION['user']) ) {
-		header("Location:admin_index.php");
-		exit;
+	  if(isset($_POST['re_password']))
+   {
+      $ols =$_POST['old'];
+      $njew =$_POST['new'];
+      $re_new =$_POST['re_new'];
+
+      //echo $ols.$njew.$re_new;
+
+      $old_pass=md5($ols);
+      //echo  $old_pass;
+
+       
+       $query_old ="SELECT 	password FROM signup WHERE username='".$_SESSION['sess_username']."'";
+	   $result_old =mysql_query($query_old);
+	   while ($query_row=mysql_fetch_array($result_old)) 
+	   {
+	   	$old =$query_row['password'];
+	   }
+	   //echo $old;
+
+	   if($old_pass==$old)
+	   {
+           if($njew==$re_new)
+           {
+           	    $f1=md5($njew);
+                $query_up ="UPDATE signup SET password='$f1' WHERE username='".$_SESSION['sess_username']."'";
+                $result_up =mysql_query($query_up);
+                echo "<script>alert('Successfully'); window.location='fact_hd_change_password.php'</script>";
+           }
+           else
+           {
+              echo "<script>alert('Your new and Retype Password is not match'); window.location='fact_hd_change_password.php'</script>";
+           }
+	   }
+	   else
+	   {
+	   	  echo "<script>alert('Your old password is wrong'); window.location='fact_hd_change_password.php'</script>";
+	   }
+
 	}
-		$id =$_SESSION['user'];
-		$chg_pwd=mysql_query("select * from uni_admin where username='$id'");
-		
-		$chg_pwd1=mysql_fetch_array($chg_pwd);
-		$data_pwd=$chg_pwd1['password'];
-		if($data_pwd==$old_pass)
-		{
-		if($new_pass1==$re_pass1)
-		{
-			$pass1=md5($new_pass1);
-			$update_pwd=mysql_query("update uni_admin set password='$pass1' where username='$id'");
-			echo "<script>alert('Update Sucessfully'); window.location='admin_change_password.php'</script>";
-		}
-		else{
-			echo "<script>alert('Your new and Retype Password is not match'); window.location='admin_change_password.php'</script>";
-		}
-		}
-		else
-		{
-		echo "<script>alert('Your old password is wrong'); window.location='admin_change_password.php'</script>";
-		}}
+
 	?>
 	
 	<form method="post">
@@ -361,7 +325,7 @@ dd input {
 				
 			</dt>
 				<dd>
-					<input type="password" name="old_pass" placeholder="Old Password..." value="" required />
+					<input type="password" name="old" placeholder="Old Password..." value="" required />
 				</dd>
 		</dl>
 		<dl>
@@ -369,7 +333,7 @@ dd input {
 				
 			</dt>
 				<dd>
-					<input type="password" name="new_pass" placeholder="New Password..." value=""  required />
+					<input type="password" name="new" placeholder="New Password..." value=""  required />
 				</dd>
 		</dl>
 		<dl>
@@ -377,7 +341,7 @@ dd input {
 				
 			</dt>
 				<dd>
-					<input type="password" name="re_pass" placeholder="Retype New Password..." value="" required />
+					<input type="password" name="re_new" placeholder="Retype New Password..." value="" required />
 				</dd>
 		</dl>
 		

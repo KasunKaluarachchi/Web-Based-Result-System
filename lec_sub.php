@@ -1,9 +1,12 @@
-<?php 
+<?php
+
     session_start();
     $role = $_SESSION['sess_userrole'];
     if(!isset($_SESSION['sess_username']) && $role!="admin"){
       header('Location: login.php?err=2');
+
     }
+
 ?>
 
 <!DOCTYPE html>
@@ -65,14 +68,9 @@
 				</button>
 
 				<div class="navbar-header pull-left">
-					<a href="index.html" class="navbar-brand">
+					<a href="#" class="navbar-brand">
 						<small>
-							<?php echo $_SESSION['sess_username'];
-							
-							 
-							?>
-							
- | University Of Jaffna
+						<?php echo $_SESSION['sess_username'];?> | Department of Computer Science
 						</small>
 					</a>
 				</div>
@@ -87,10 +85,7 @@
 
 						<li class="light-blue dropdown-modal">
 							<a data-toggle="dropdown" href="#" class="dropdown-toggle">
-								<img class="nav-user-photo" src="assets/images/avatars/avatar2.png" alt="Jason's Photo" />
-								<span class="user-info">
-									Admin
-								</span>
+								
 
 								<i class="ace-icon fa fa-caret-down"></i>
 							</a>
@@ -98,14 +93,7 @@
 							<ul class="user-menu dropdown-menu-right dropdown-menu dropdown-yellow dropdown-caret dropdown-close">
 								
 
-								<li>
-									<a href="profile.html">
-										<i class="ace-icon fa fa-user"></i>
-										Profile
-									</a>
-								</li>
-
-								<li class="divider"></li>
+								
 
 								<li>
 									<a href="logout.php">
@@ -137,14 +125,7 @@
 							
 						</ul><!-- /.breadcrumb -->
 
-						<div class="nav-search" id="nav-search">
-							<form class="form-search">
-								<span class="input-icon">
-									<input type="text" placeholder="Search ..." class="nav-search-input" id="nav-search-input" autocomplete="off" />
-									<i class="ace-icon fa fa-search nav-search-icon"></i>
-								</span>
-							</form>
-						</div><!-- /.nav-search -->
+						<!-- /.nav-search -->
 					</div>
 
 					<div class="page-content">
@@ -154,21 +135,32 @@
 								Academic Year:
 								<?php
 include('db_config.php');
-$varid_id = $_GET['prop_id'];
+
+if(isset($_GET['prop_id']))
+{
+$varid_id =$_GET['prop_id'];
+$_SESSION['uu']=$varid_id;
+$_SESSION['yr']=$_GET['prop_id'];
+}
+else
+	
+	{
+		
+	$varid_id=$_SESSION['yr'];	
+		
+	}
+//echo $varid_id ;
+//$fac="SELECT year FROM ac_year Where id=".$varid_id."";
+//$fac="SELECT year FROM ac_year Where id=".$varid_id."";
 
 
-$fac="SELECT year FROM ac_year Where id=".$varid_id."";
 
 
 
-$result1=mysql_query($fac);
-
-$name=mysql_fetch_object($result1);
-
-$i =1;
+//$i =1;
 
 ?>
-<?php echo  $name->year;  ?>
+<?php echo  $varid_id;  ?>
 								
 								
 								
@@ -214,9 +206,25 @@ $i =1;
 <br>
 <?php
 include('db_config.php');
-$varid_id = $_GET['prop_id'];
-$query ="SELECT * FROM  add_course";
-$result=mysql_query($query);
+//$varid_id = $_GET['prop_id'];
+
+$query_yr = "Select id FROM ac_year WHERE year ='$varid_id'";
+$result_yr = mysql_query($query_yr) or die(mysql_error());
+
+while($query_row1 =mysql_fetch_array($result_yr))
+{
+	$yr_id= $query_row1['id'];
+	
+}
+//echo $_GET['prop_id'];
+
+$query="SELECT DISTINCT coursename
+FROM add_course
+INNER JOIN assign_lecturer ON add_course.couseid = assign_lecturer.courseid WHERE assign_lecturer.acdm_yr_id='$yr_id'";
+			
+$result=mysql_query($query) or die(mysql_error());
+
+
 $i =1;
 
 ?>
@@ -241,12 +249,57 @@ $i =1;
 
 while($query_row =mysql_fetch_array($result))
   {
-	   echo '<td><a href="lec_ex_type.php?prop_id='.$i.'?prop_id='.$varid_id.'">'.$query_row['coursename'].'</a></td>';
+	  $cc=$query_row['coursename'];
+	   $query2 = "SELECT id FROM add_course WHERE coursename='$cc'";
+	   $result2 = mysql_query( $query2) or die(mysql_error());
+	   //$query_row2 =mysql_fetch_array($result2);
+	   while($query_row2 =mysql_fetch_array($result2))
+{
+	$co_id = $query_row2['id'];
+}
+	   
+	   
+	   	$user = $_SESSION['sess_username'];
+    $query_dep = "SELECT signup.dep_id FROM signup WHERE signup.username='$user'";
+$dept4=0;
+		$result_dep= mysql_query($query_dep);
+		 while($row_dep = mysql_fetch_array($result_dep))
+			{
+				
+				$dept_id = $row_dep['dep_id'];
+				
+			}
+	   $course=$query_row['coursename'];
+	 
+	$query4= "SELECT save_state FROM exam_format WHERE 	dep_id='$dept_id' AND courseid='$course' "   ;
+	   $result4= mysql_query($query4) or die(mysql_error());
+		 while($row4 = mysql_fetch_array($result4))
+			{
+				
+				$dept4 = $row4['save_state'];
+				//$_SESSION['dep4']=$dept4;
+				
+			}
+			
+	   if($dept4 ==1)
+	   {
+	   echo '<td><a href="lec_view_result.php?prop_id='.$query_row['coursename'].'">'.$query_row['coursename'].'</a></td>';
+	   
+	   }
+	   else
+	   {
+	   echo '<td><a href="lec_ex_type.php?prop_id='.$query_row['coursename'].'">'.$query_row['coursename'].'</a></td>';
+	
+	   }
+	   
 		echo "</tr>";
 		$i++;
+		$dept4=0;
    }
    echo "<tr>";
    echo "</tr>";
+ //  $_SESSION['sub']=$_GET['prop_id'];
+
 ?>
 </thead>
 </table>

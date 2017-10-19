@@ -5,8 +5,6 @@
       header('Location: login.php?err=2');
     }
 ?>
-
-
 <!DOCTYPE html>
 <html lang="en">
 	<head>
@@ -66,10 +64,14 @@
 				</button>
 
 				<div class="navbar-header pull-left">
-					<a href="fact_hd_index.php" class="navbar-brand">
+					<a href="index.html" class="navbar-brand">
 						<small>
-							<?php echo $_SESSION['sess_username'];?>| University Of Jaffna
+							<?php echo $_SESSION['sess_username'];
 							
+							 
+							?>
+							
+ | University Of Jaffna
 						</small>
 					</a>
 				</div>
@@ -84,9 +86,9 @@
 
 						<li class="light-blue dropdown-modal">
 							<a data-toggle="dropdown" href="#" class="dropdown-toggle">
-								
+								<img class="nav-user-photo" src="assets/images/avatars/avatar2.png" alt="Jason's Photo" />
 								<span class="user-info">
-									
+									Admin
 								</span>
 
 								<i class="ace-icon fa fa-caret-down"></i>
@@ -95,12 +97,19 @@
 							<ul class="user-menu dropdown-menu-right dropdown-menu dropdown-yellow dropdown-caret dropdown-close">
 								
 
-								
+								<li>
+									<a href="profile.html">
+										<i class="ace-icon fa fa-user"></i>
+										Profile
+									</a>
+								</li>
+
+								<li class="divider"></li>
+
 								<li>
 									<a href="logout.php">
 										<i class="ace-icon fa fa-power-off"></i>
 										Logout
-										
 									</a>
 								</li>
 							</ul>
@@ -115,60 +124,17 @@
 				try{ace.settings.loadState('main-container')}catch(e){}
 			</script>
 
-			<div id="sidebar" class="sidebar                  responsive                    ace-save-state">
+			<!-- <div id="sidebar" class="sidebar                  responsive                    ace-save-state">
 				<script type="text/javascript">
 					try{ace.settings.loadState('sidebar')}catch(e){}
 				</script>
 
-				<!-- /.sidebar-shortcuts -->
+				/.sidebar-shortcuts 
 
-				<ul class="nav nav-list">
-					
-					<li class="">
-						<a href="fact_hd_index.php">
-							
-							<span class="menu-text">Add Department</span>
-						</a>
+				
 
-						<b class="arrow"></b>
-					</li>
-					
-					
-					<li class="active">
-						<a href="fact_hd_assign_dean.php">
-							
-							<span class="menu-text">Assign Department Head</span>
-						</a>
-
-						<b class="arrow"></b>
-					</li>
-					
-					
-					<li class="">
-						<a href="fact_hd_asgn_lec.php" >
-						
-							<span class="menu-text">Assign Lecturer</span>
-
-							
-						</a>
-					</li>
-					
-					
-					<li class="">
-						<a href="fact_hd_change_password.php">
-						
-							<span class="menu-text">Change Passwords</span>
-						</a>
-
-						<b class="arrow"></b>
-					</li>
-					
-				</ul><!-- /.nav-list -->
-
-				<div class="sidebar-toggle sidebar-collapse" id="sidebar-collapse">
-					<i id="sidebar-toggle-icon" class="ace-icon fa fa-angle-double-left ace-save-state" data-icon1="ace-icon fa fa-angle-double-left" data-icon2="ace-icon fa fa-angle-double-right"></i>
-				</div>
-			</div>
+				
+			</div>-->
 
 			<div class="main-content">
 				<div class="main-content-inner">
@@ -180,16 +146,23 @@
 							
 						</ul><!-- /.breadcrumb -->
 
-						<!-- /.nav-search -->
+						<div class="nav-search" id="nav-search">
+							<form class="form-search">
+								<span class="input-icon">
+									<input type="text" placeholder="Search ..." class="nav-search-input" id="nav-search-input" autocomplete="off" />
+									<i class="ace-icon fa fa-search nav-search-icon"></i>
+								</span>
+							</form>
+						</div><!-- /.nav-search -->
 					</div>
 
 					<div class="page-content">
 						<!-- /.ace-settings-container -->
-<div class="page-header">
+          <div class="page-header">
 							<h1>
-								Assign Departmnet Head
+								
 								<small>
-									<i class="ace-icon fa fa-angle-double-right"></i>
+									
 									
 								</small>
 							</h1>
@@ -209,7 +182,7 @@
 											<div class="pull-right tableTools-container"></div>
 										</div>
 										<div class="table-header">
-											Department Head details
+											Academic Year details
 											
 										</div>
 											<br>
@@ -218,185 +191,72 @@
 
 										<!-- div.dataTables_borderWrap -->
 										<div align="center"  >
-<div>
-															<?php
+<html>
+
+
+<body>
+<center>
+<br>
+<?php
 include('db_config.php');
 
-/* $query ="SELECT 
-				lecturers.lec_name  AS lecr_name,
-				
-				department.dep_name AS dept_name FROM lecturers JOIN department ON department.fac_id=lecturers.dept_id "; */
-				
-$query ="SELECT lecturers.lec_name AS lecr_name,department.dep_name AS deprt_name FROM lecturers INNER JOIN department ON department.hd_id=lecturers.id where lecturers.fact_id=(SELECT fac_id FROM faculty_admin where faculty_admin.fac_admin_name='".$_SESSION['sess_username']."')";
+$user_dept=$_SESSION['sess_username'];
+
+$deptid_query="SELECT `dep_id` FROM `signup` WHERE `username`='$user_dept'";
+$deptid_result=mysql_query($deptid_query) or die(mysql_error()); 
+ $row = mysql_fetch_array($deptid_result) or die(mysql_error());
+
+$q =$row['dep_id'];
 
 
+
+$query ="SELECT * FROM  ac_year WHERE dep_id ='$q '";
 $result=mysql_query($query);
-$i =0;
+$i =1;
 
-$query_drop = "SELECT dep_name FROM department where department.fac_id=(SELECT fac_id FROM faculty_admin where faculty_admin.fac_admin_name='".$_SESSION['sess_username']."')";
-$result2=mysql_query($query_drop);
-
-$query_drop2 = "SELECT lec_name FROM lecturers where lecturers.fact_id=(SELECT fac_id FROM faculty_admin where faculty_admin.fac_admin_name='".$_SESSION['sess_username']."')";
-
-$result3=mysql_query($query_drop2);
+$query2 ="SELECT id FROM  ac_year WHERE dep_id ='$q '";
+$result2=mysql_query($query2);
 
 
-
-
-$query_se ="SELECT fac_id FROM signup WHERE username='".$_SESSION['sess_username']."'";
-$result_se =mysql_query($query_se);
-$query_row =mysql_fetch_array($result_se);
-$fac_id =$query_row['fac_id'];
 
 ?>
 
-<form  action="<?php echo $_SERVER['PHP_SELF']; ?>" method="POST" >
+<form  action="Add_Academic_year_tables_Copy4details.php" method="POST" >
 <table id="simple-table" class="table  table-bordered table-hover">
-											<thead>
-  <tr>
+  <thead>
   
-   <th width="400"> <div align="center">Name of Departmnet</div></th>
-    <th width="400"> <div align="center">Name of Head</div></th>
-     <th width="50"> <div align="center">Add</div></th>
-	 
+  
    
+    <tr width="600"> <div align="center"></div></tr>
    
-    
-
+    <span class="green">
+	<!--<th  width="20"> <div ><a class="blue" href="#"><i class="ace-icon glyphicon glyphicon-ok"></i></a> </div></th>
+    <th width="70"> <div align="center"><a class="green" href="#"><i class="ace-icon fa fa-pencil bigger-130"></i></a> </div></th></span>
+    <th width="70"> <div align="center"><a class="red" href="#"><i class="ace-icon fa fa-trash-o bigger-120"></i></a> </div></th>
+	-->
    
-  </tr>
+  
 
 <?php
 
 while($query_row =mysql_fetch_array($result))
-   {
-	 
-	   
-	   echo "<td>";
-	   echo '<input type="text" size="50" value ="'.$query_row['deprt_name'].'" name ="fn'.$i.'"/>';
-	   echo "</td>";
-	   echo "<td>";
-	   echo '<input type="text" size="50" value ="'.$query_row['lecr_name'].'" name ="fn'.$i.'"/>';
-	   echo "</td>";
-		
-	  
-		
-		echo "<td>";
-	    echo '<input type="hidden" name="check-all'.$i.'" />';
-	    echo "</td>";
-	   
-
-        
-	    
-		
+  {
+	   echo '<td><a href="lec_sub.php?prop_id='.$i.'">'.$query_row['year'].'</a></td>';
 		echo "</tr>";
 		$i++;
-		 
-	  
-   
    }
    echo "<tr>";
-    
-    
-
-    echo "<td>";
-    echo '<input type ="hidden" name = "txtfn"/>';
-	echo "<select name='dep_name'>";
-		while($row = mysql_fetch_array($result2))
-		{
-			echo "<option value='".$row['dep_name']."'>".$row['dep_name']."</option>";
-		}
-	echo "</select>";	
-	
-	
-	
-    echo "</td>";
-	
-	 echo "<td>";
-    echo '<input type ="hidden" name = "txtfn"/>';
-	echo "<select name='lec_name'>";
-		while($row = mysql_fetch_array($result3))
-		{
-			echo "<option value='".$row['lec_name']."'>".$row['lec_name']."</option>";
-		}
-	echo "</select>";	
-	
-    echo "</td>";
-	
-	
-
-	
-
-    
-    echo "<td>";
-    /* echo '<input type ="submit" value ="Add" name ="addbtn"/>'; */
-	echo'<button class="btn btn-white btn-info btn-bold" type ="submit" name ="addbtn">
-												<i class="ace-icon glyphicon glyphicon-plus"></i>
-												
-											</button>';
-									
-    if(isset($_POST['addbtn']))
-    {
-    
-		$f =$_POST['dep_name'];
-		$l =$_POST['lec_name'];
-		//echo $f;
-		//echo $l;
-
-		$query_id ="SELECT id FROM lecturers WHERE 	lec_name='$l'";
-		$result_id =mysql_query($query_id);
-		 while($query_row =mysql_fetch_array($result_id))
-              {
-                   $id =$query_row['id'];
-              }
-        //echo $id;
-        $query_id1 ="SELECT dep_id FROM department WHERE  dep_name='$f'";
-		$result_id1 =mysql_query($query_id1);
-		 while($query_row =mysql_fetch_array($result_id1))
-              {
-                   $dept_id =$query_row['dep_id'];
-              }	
-             //echo $dept_id;
-    
-        $query_up ="UPDATE department SET 	hd_id='$id' WHERE dep_name='$f' ";
-		$result_up =mysql_query($query_up);
-
-
-
-        echo $fac_id;
-
-		$query_up1 ="UPDATE signup SET fac_id='$fac_id', dep_id='$dept_id' WHERE name='$l' ";
-		$result_up1 =mysql_query($query_up1);
-
-
-         if($result_up1)
-	             {
-	             
-	             	 echo "<script type='text/javascript'>alert('successfully');window.location = \"fact_hd_assign_dean.php\"</script>";
-	             	
-	             }
-	             else
-	             {
-	             	 echo "<script type='text/javascript'>alert('Error');window.location = \"fact_hd_assign_dean.php\"</script>";
-	             	// echo $r;   	
-	             	                
-	             }
-       
-
-    }
-   
-    echo "</td>";
-
-
-
    echo "</tr>";
 ?>
 </thead>
 </table>
 </form>
 
+</center>
 
-														<hr />
+
+</body>
+</html>
 
 
 										</div>

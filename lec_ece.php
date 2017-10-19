@@ -1,4 +1,5 @@
 <?php 
+     //error_reporting(0);
     session_start();
     $role = $_SESSION['sess_userrole'];
     if(!isset($_SESSION['sess_username']) && $role!="admin"){
@@ -10,7 +11,7 @@
 	<head>
 		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
 		<meta charset="utf-8" />
-		<title>Form Wizard - Ace Admin</title>
+		<title>Exam Result Summarizing System</title>
 
 		<meta name="description" content="and Validation" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
@@ -65,7 +66,7 @@
 				</button>
 
 				<div class="navbar-header pull-left">
-					<a href="index.html" class="navbar-brand">
+					<a href="lec_ex_type.php" class="navbar-brand">
 						<small>
 							Lecturer | Dr. X
 								<?php echo $_SESSION['sess_username'];?>
@@ -168,7 +169,7 @@
 						
 					</li>
 					
-					<li class="">
+					<li class="active">
 						<a href="lec_ece.php" >
 							
 							<span class="menu-text">
@@ -185,6 +186,19 @@
 								</a>
 								
 							
+					</li>
+					<li class="">
+						<a href="lec_view_result.php">
+							
+
+							<span class="menu-text">
+								Veiw Result
+
+								
+							</span>
+						</a>
+
+						<b class="arrow"></b>
 					</li>
 
 					<li class="">
@@ -217,12 +231,45 @@
 					<i id="sidebar-toggle-icon" class="ace-icon fa fa-angle-double-left ace-save-state" data-icon1="ace-icon fa fa-angle-double-left" data-icon2="ace-icon fa fa-angle-double-right"></i>
 				</div>
 			</div>
+           <?php
+include('db_config.php');
+$varid_id =$_SESSION['ac'];
+//$_SESSION['sub']=$_GET['prop_id'];
 
+$query ="SELECT coursename,couseid FROM add_course WHERE id ='".$_SESSION['prop_id']."'";
+$result =mysql_query($query);
+$query_row =mysql_fetch_array($result);
+$sub =$query_row['coursename'];
+$sub1 =$query_row['couseid'];
+/*while($query_row=mysql_fetch_array($result))
+{
+	$sub =$query_row['coursename'];
+
+	$sub1 =$query_row['couseid'];
+}*/
+
+
+
+
+
+$fac="SELECT year FROM ac_year Where id='".$varid_id."'";
+
+
+
+$result1=mysql_query($fac);
+
+$name=mysql_fetch_object($result1);
+
+$i =1;
+
+
+?>
 			<div class="main-content">
 				<div class="main-content-inner">
 					<div class="breadcrumbs ace-save-state" id="breadcrumbs">
 						<ul class="breadcrumb">
-							<li class="active"><h4>Level-1S/1G | 2015/2016 | CSC111GC3 | Foundation of Computer Science</h4></li>
+							<li class="active"><h4> 
+                       <?php echo  $name->year; ?>|<?php echo $sub1 ?>| <?php echo  $sub  ?></h4></li>
 						</ul><!-- /.breadcrumb -->
 
 						<div class="nav-search" id="nav-search">
@@ -270,198 +317,544 @@
 
 										<!-- div.dataTables_borderWrap -->
 										<div>
+<?php
+include('db_config.php');
+
+$query="SELECT qstn_no FROM add_course Where couseid='$sub1'";
+$result=mysql_query($query);
+$query_row =mysql_fetch_array($result);
+$qstn_no =$query_row['qstn_no'];
+//
+include('db_config.php');
+
+if($qstn_no==4)
+{
+ 
+$query="SELECT st_index,q1,q2,q3,q4 FROM $sub1";
+$result=mysql_query($query);
+
+
+?>
+
+<form  action="<?php echo $_SERVER['PHP_SELF']; ?>" method="POST" >
+<table id="simple-table" class="table  table-bordered table-hover">
+<thead>
+  <tr>
+  
+
+   <th width="50"> <div align="center">Index</div></th>
+   <th width="50"> <div align="center">Q1</div></th>
+   <th width="50"> <div align="center">Q2</div></th>
+   <th width="50"> <div align="center">Q3</div></th>
+   <th width="50"> <div align="center">Q4</div></th>
+    <span class="green">
+
+	<th  width="20"> <div ><a class="blue" href="#"><i class="ace-icon glyphicon glyphicon-ok"></i></a> </div>
+	</th>
+    <th width="70"> <div align="center"><a class="green" href="#"><i class="ace-icon fa fa-pencil bigger-130"></i></a> </div></th></span>
+    <th width="70"> <div align="center"><a class="red" href="#"><i class="ace-icon fa fa-trash-o bigger-120"></i></a> </div></th>
+	
+   
+  </tr>
+
+<?php
+
+while($query_row=mysql_fetch_array($result))
+   {
+	 
+	   echo "<td>";
+	   echo '<input type="text" value ="'.$query_row['st_index'].'" name ="st_index'.$i.'"/>';
+	   echo "</td>";
+
+
+	   echo "<td>";
+	   echo '<input type="text" value ="'.$query_row['q1'].'" name ="q1'.$i.'"/>';
+	   echo "</td>";
+
+	   echo "<td>";
+	   echo '<input type="text" value ="'.$query_row['q2'].'" name ="q2'.$i.'"/>';
+	   echo "</td>";
+
+	   echo "<td>";
+	   echo '<input type="text" value ="'.$query_row['q3'].'" name ="q3'.$i.'"/>';
+	   echo "</td>";
+
+	   echo "<td>";
+	   echo '<input type="text" value ="'.$query_row['q4'].'" name ="q4'.$i.'"/>';
+	   echo "</td>";
+		
+		
+		
+		echo "<td>";
+	    echo '<input type="checkbox" name="check-all'.$i.'" />';
+	    echo "</td>";
+	   
+ 
+       
+
+        echo "<td>";
+	    
+		
+		 echo '<button class="btn btn-white btn-default btn-round" name ="updatebtn'.$i.'" >
+												<i class="ace-icon glyphicon glyphicon-pencil"></i>
+												
+											</button>';
+	    
+		
+		
+		
+			
+		if(isset($_POST['updatebtn'.$i.'']))
+	    {
+	    	if(isset($_POST['check-all'.$i.'']))
+	    	{
+
+                //$r =$query_row['no'];
+                   //$lc =$_POST['lc'.$i.''];
+  
+	    		   //$l =$_POST['le'.$i.''];
+				  $id =$_POST['st_index'.$i.''];
+	              $q1 =$_POST['q1'.$i.''];
+	              $q2 =$_POST['q2'.$i.''];
+	              $q3 =$_POST['q3'.$i.''];
+	              $q4 =$_POST['q4'.$i.''];
+
+                $query ="UPDATE $sub1 SET q1='$q1' ,q2='$q2' ,q3='$q3',q4='$q4'  WHERE st_index='$id'";
+	   
+	             $result =mysql_query($query);
+	             if(!$result)
+	             {
+	             
+	             	 echo "<script type='text/javascript'>alert('Update failed');window.location = \"lec_ece.php\"</script>";
+	             }
+	             else
+	             {
+	             	 echo "<script type='text/javascript'>alert('Update successfully');window.location = \"lec_ece.php\"</script>";   	
+	             
+	                
+	             }
+
+	    	}
+	    	else
+	    	{
+	    	
+			echo "<script type='text/javascript'>alert('Select the check box');window.location = \"lec_ece.php\"</script>";
+	    		
+	    	}
+	    	
+	    }		
+
+			
+	    echo "</td>";
+
+	    echo "<td>";
+	    
+		
+		 echo '<button class="btn btn-white btn-warning btn-bold" name ="deletebtn'.$i.'" >
+												<i class="ace-icon fa fa-trash-o bigger-120 orange"></i>
+												
+											</button>';
+	    
+	    if(isset($_POST['deletebtn'.$i.'']))
+	    {
+	    	if(isset($_POST['check-all'.$i.'']))
+	    	{
+				  $id =$_POST['st_index'.$i.''];
+				 //$lc =$_POST['lc'.$i.''];
+               
+             
+                 $query ="DELETE FROM $sub1 WHERE  st_index='".$id."'";
+	   
+	             $result =mysql_query($query);
+	             if($result)
+	             {
+	                echo "<script type='text/javascript'>alert('Delete successfully');window.location = \"lec_ece.php\"</script>";
+	             	
+	             }
+	             
+	             else
+	             {
+
+	             	echo "<script type='text/javascript'>alert('Delete is faild');window.location = \"lec_ece.php\"</script>";
+	             
+	             }
+
+	    	}
+	    	else
+	    	{
+	    		
+	    		echo "<script type='text/javascript'>alert('Select the check box');window.location = \"lec_ece.php\"</script>";
+	    	}
+	    
+	    }
+	    echo "</td>";	
+
+	    
+
+		echo "</tr>";
+		$i++;
+		 
+	  
+   
+   }
+   echo "<tr>";
+    
+    echo "<td>";
+    echo '<input type ="text" name = "txtindex"/>';
+    echo "</td>";
+
+     echo "<td>";
+    echo '<input type ="text" name = "txtq1"/>';
+    echo "</td>";
+
+
+    echo "<td>";
+    echo '<input type ="text" name = "txtq2"/>';
+    echo "</td>";
+
+     echo "<td>";
+    echo '<input type ="text" name = "txtq3"/>';
+    echo "</td>";
+
+
+    echo "<td>";
+    echo '<input type ="text" name = "txtq4"/>';
+    echo "</td>";
+
+
+
+    
+    echo "<td>";
+    /* echo '<input type ="submit" value ="Add" name ="addbtn"/>'; */
+	echo'<button class="btn btn-white btn-info btn-bold" type ="submit" name ="addbtn">
+												<i class="ace-icon glyphicon glyphicon-plus"></i>
+												
+											</button>';
+
+    if(isset($_POST['addbtn']))
+    {
+    
+       
+
+	    $id =$_POST['txtindex'];
+	    $q1 =$_POST['txtq1'];
+	    $q2 =$_POST['txtq2'];
+	    $q3 =$_POST['txtq3'];
+	    $q4 =$_POST['txtq4'];
+
+      
+        if(!$id)
+        {
+        	echo "<script type='text/javascript'>alert('Fill all details')</script>";
+        }
+        else
+        {
+        	$query ="INSERT INTO $sub1 (st_index,ac_year,q1,q2,q3,q4) VALUES ('$id','$name->year','$q1','$q2','$q3','$q4')";
+	   
+	        $result =mysql_query($query);
+	         if(!$result)
+	             {
+	          
+	             	echo "<script type='text/javascript'>alert('Insert is faild');window.location = \"lec_ece.php\"</script>";
+	             	
+	             }
+	             else
+	             {
+
+	             	
+	             	echo "<script type='text/javascript'>alert('Insert successfully');window.location = \"lec_ece.php\"</script>";
+	             	
+	             	
+	             }
+
+        }
+        
+       
+
+    }
+   
+    echo "</td>";
+   echo "</tr>";
+}
+else if($qstn_no==6)
+{$query="SELECT st_index,q1,q2,q3,q4,q5,q6 FROM $sub1";
+$result=mysql_query($query);
+
+
+?>
+
+<form  action="<?php echo $_SERVER['PHP_SELF']; ?>" method="POST" >
+<table id="simple-table" class="table  table-bordered table-hover">
+<thead>
+  <tr>
+  
+
+   <th width="50"> <div align="center">Index</div></th>
+   <th width="30"> <div align="center">Q1</div></th>
+   <th width="30"> <div align="center">Q2</div></th>
+   <th width="30"> <div align="center">Q3</div></th>
+   <th width="30"> <div align="center">Q4</div></th>
+   <th width="30"> <div align="center">Q5</div></th>
+   <th width="30"> <div align="center">Q6</div></th>
+    <span class="green">
+
+	<th  width="20"> <div ><a class="blue" href="#"><i class="ace-icon glyphicon glyphicon-ok"></i></a> </div>
+	</th>
+    <th width="70"> <div align="center"><a class="green" href="#"><i class="ace-icon fa fa-pencil bigger-130"></i></a> </div></th></span>
+    <th width="70"> <div align="center"><a class="red" href="#"><i class="ace-icon fa fa-trash-o bigger-120"></i></a> </div></th>
+	
+   
+  </tr>
+
+<?php
+
+while($query_row=mysql_fetch_array($result))
+   {
+	 
+	   echo "<td>";
+	   echo '<input type="text" size="20" value ="'.$query_row['st_index'].'" name ="st_index'.$i.'"/>';
+	   echo "</td>";
+
+
+	   echo "<td>";
+	   echo '<input type="text" size="10" value ="'.$query_row['q1'].'" name ="q1'.$i.'"/>';
+	   echo "</td>";
+
+	   echo "<td>";
+	   echo '<input type="text" size="10" value ="'.$query_row['q2'].'" name ="q2'.$i.'"/>';
+	   echo "</td>";
+
+	   echo "<td>";
+	   echo '<input type="text"  size="10" value ="'.$query_row['q3'].'" name ="q3'.$i.'"/>';
+	   echo "</td>";
+
+	   echo "<td>";
+	   echo '<input type="text" size="10" value ="'.$query_row['q4'].'" name ="q4'.$i.'"/>';
+	   echo "</td>";
+
+	   echo "<td>";
+	   echo '<input type="text" size="10" value ="'.$query_row['q5'].'" name ="q5'.$i.'"/>';
+	   echo "</td>";
+
+	   echo "<td>";
+	   echo '<input type="text" size="10" value ="'.$query_row['q6'].'" name ="q6'.$i.'"/>';
+	   echo "</td>";
+		
+		
+		
+		echo "<td>";
+	    echo '<input type="checkbox" name="check-all'.$i.'" />';
+	    echo "</td>";
+	   
+ 
+       
+
+        echo "<td>";
+	    
+		
+		 echo '<button class="btn btn-white btn-default btn-round" name ="updatebtn'.$i.'" >
+												<i class="ace-icon glyphicon glyphicon-pencil"></i>
+												
+											</button>';
+	    
+		
+		
+		
+			
+		if(isset($_POST['updatebtn'.$i.'']))
+	    {
+	    	if(isset($_POST['check-all'.$i.'']))
+	    	{
+
+                //$r =$query_row['no'];
+           
+				 $id =$_POST['st_index'.$i.''];
+	             $q1 =$_POST['q1'.$i.''];
+	             $q2 =$_POST['q2'.$i.''];
+	             $q3 =$_POST['q3'.$i.''];
+	             $q4 =$_POST['q4'.$i.''];
+	             $q5 =$_POST['q5'.$i.''];
+	             $q6 =$_POST['q6'.$i.''];
+
+                $query ="UPDATE $sub1 SET q1='$q1' ,q2='$q2',q3='$q3',q4='$q4',q5='$q5',q6='$q6' WHERE st_index='$id'";
+	   
+	             $result =mysql_query($query);
+	             if(!$result)
+	             {
+	             
+	             	 echo "<script type='text/javascript'>alert('Update failed');window.location = \"lec_ece.php\"</script>";
+	             }
+	             else
+	             {
+	             	 echo "<script type='text/javascript'>alert('Update successfully');window.location = \"lec_ece.php\"</script>";   	
+	             
+	                
+	             }
+
+	    	}
+	    	else
+	    	{
+	    	
+			echo "<script type='text/javascript'>alert('Select the check box');window.location = \"lec_ece.php\"</script>";
+	    		
+	    	}
+	    	
+	    }		
+
+			
+	    echo "</td>";
+
+	    echo "<td>";
+	    
+		
+		 echo '<button class="btn btn-white btn-warning btn-bold" name ="deletebtn'.$i.'" >
+												<i class="ace-icon fa fa-trash-o bigger-120 orange"></i>
+												
+											</button>';
+	    
+	    if(isset($_POST['deletebtn'.$i.'']))
+	    {
+	    	if(isset($_POST['check-all'.$i.'']))
+	    	{
+				   $id =$_POST['st_index'.$i.''];
+				 //$lc =$_POST['lc'.$i.''];
+               
+             
+                 $query ="DELETE FROM $sub1 WHERE st_index='$id'";
+	   
+	             $result =mysql_query($query);
+	             if($result)
+	             {
+	                echo "<script type='text/javascript'>alert('Delete successfully');window.location = \"lec_ece.php\"</script>";
+	             	
+	             }
+	             
+	             else
+	             {
+
+	             	echo "<script type='text/javascript'>alert('Delete is faild');window.location = \"lec_ece.php\"</script>";
+	             
+	             }
+
+	    	}
+	    	else
+	    	{
+	    		
+	    		echo "<script type='text/javascript'>alert('Select the check box');window.location = \"lec_ece.php\"</script>";
+	    	}
+	    
+	    }
+	    echo "</td>";	
+
+	    
+
+		echo "</tr>";
+		$i++;
+		 
+	  
+   
+   }
+   echo "<tr>";
+    
+    echo "<td>";
+    echo '<input type ="text" size="20"  name = "txtindex"/>';
+    echo "</td>";
+
+     echo "<td>";
+    echo '<input type ="text" size="10" name = "txtq1"/>';
+    echo "</td>";
+
+
+    echo "<td>";
+    echo '<input type ="text" size="10" name = "txtq2"/>';
+    echo "</td>";
+
+     echo "<td>";
+    echo '<input type ="text" size="10" name = "txtq3"/>';
+    echo "</td>";
+
+
+    echo "<td>";
+    echo '<input type ="text" size="10" name = "txtq4"/>';
+    echo "</td>";
+
+      echo "<td>";
+    echo '<input type ="text" size="10" name = "txtq5"/>';
+    echo "</td>";
+
+
+    echo "<td>";
+    echo '<input type ="text"  size="10" name = "txtq6"/>';
+    echo "</td>";
+
+
+
+    
+    echo "<td>";
+    /* echo '<input type ="submit" value ="Add" name ="addbtn"/>'; */
+	echo'<button class="btn btn-white btn-info btn-bold" type ="submit" name ="addbtn">
+												<i class="ace-icon glyphicon glyphicon-plus"></i>
+												
+											</button>';
+
+    if(isset($_POST['addbtn']))
+    {
+    
+       
+
+	    $id =$_POST['txtindex'];
+	    $q1 =$_POST['txtq1'];
+	    $q2 =$_POST['txtq2'];
+	    $q3 =$_POST['txtq3'];
+	    $q4 =$_POST['txtq4'];
+	    $q5 =$_POST['txtq5'];
+	    $q6 =$_POST['txtq6'];
+
+      
+        if(!$id)
+        {
+        	echo "<script type='text/javascript'>alert('Fill all details')</script>";
+        }
+        else
+        {
+        	$query ="INSERT INTO $sub1 (st_index,ac_year,q1,q2,q3,q4,q5,q6) VALUES ('$id','$name->year','$q1','$q2','$q3','$q4','$q5','$q6')";
+	   
+	        $result =mysql_query($query);
+	         if(!$result)
+	             {
+	          
+	             	echo "<script type='text/javascript'>alert('Insert is faild');window.location = \"lec_ece.php\"</script>";
+	             	
+	             }
+	             else
+	             {
+
+	             	
+	             	echo "<script type='text/javascript'>alert('Insert successfully');window.location = \"lec_ece.php\"</script>";
+	             	
+	             	
+	             }
+
+        }
+        
+       
+
+    }
+   
+    echo "</td>";
+   echo "</tr>";}
+?>
+</thead>
+</table>
+</form>
+
 										
 										
 			
 
 
-<?php
-$objConnect = mysql_connect("localhost","root","") or die("Error Connect to Database");
-$objDB = mysql_select_db("exam_result");
-
-//*** Add Condition ***//
-if(isset($_POST["hdnCmd"]))
-	{
-	if($_POST["hdnCmd"] == "Add")
-{
-	
-	
-	$strSQL = "INSERT INTO add_ece ";
-	$strSQL .="(courseid,coursename,level) ";
-	$strSQL .="VALUES ";
-	$strSQL .="('".$_POST["txtAddcourseid"]."','".$_POST["txtAddcoursename"]."' ";
-	$strSQL .=",'".$_POST["txtAddlevel"]."') ";
-	
-	$objQuery = mysql_query($strSQL);
-	if(!$objQuery)
-	{
-		echo "Error Save [".mysql_error()."]";
-	}
-	/* header("location:$_SERVER[PHP_SELF]");
-	exit(); */
-}
-	}
-
-//*** Update Condition ***//
-if(isset($_POST["hdnCmd"]))
-	{
-if($_POST["hdnCmd"] == "Update")
-{
-	$strSQL = "UPDATE add_course SET ";
-	$strSQL .="courseid = '".$_POST["txtEditcourseid"]."' ";
-	$strSQL .=",coursename = '".$_POST["txtEditcoursename"]."' ";
-	$strSQL .=",level = '".$_POST["txtEditlevel"]."' ";
-	
-	$strSQL .="WHERE courseid = '".$_POST["hdnEditcourseid"]."' ";
-	$objQuery = mysql_query($strSQL);
-	if(!$objQuery)
-	{
-		echo "Error Update [".mysql_error()."]";
-	}
-	/* header("location:$_SERVER[PHP_SELF]");
-	exit(); */
-}
-	}
-//*** Delete Condition ***//
-if(isset($_GET["Action"]))
-	{
-		
-if($_GET["Action"] == "Del")
-{
-	$strSQL = "DELETE FROM add_course ";
-		
-	$strSQL .="WHERE courseid = '".$_GET["CusID"]."' ";
-		
-	$objQuery = mysql_query($strSQL);
-	if(!$objQuery)
-	{
-		echo "Error Delete [".mysql_error()."]";
-	}
-	/* header("location:$_SERVER[PHP_SELF]");
-	exit() */;
-}
-	}
-$strSQL = "SELECT * FROM add_ece";
-$objQuery = mysql_query($strSQL) or die ("Error Query [".$strSQL."]");
-?>
-<form name="frmMain" method="post" action="<?php echo $_SERVER["PHP_SELF"];?>">
-<input type="hidden" name="hdnCmd" value="">
 
 
-
-<table id="dynamic-table" class="table table-striped table-bordered table-hover">
-
-  <tr>
-    <th width="91"> <div align="center">Index Number</div></th>
-    <th width="98"> <div align="center">Registration Number </div></th>
-    
-	<th width="91"> <div align="center">Question 01</div></th>
-    <th width="98"> <div align="center">Question 02</div></th>
-    <th width="91"> <div align="center">Question 03</div></th>
-	<th width="91"> <div align="center">Question 04</div></th>
-    <th width="98"> <div align="center">Question 05</div></th>
-    <th width="91"> <div align="center">Question 06</div></th>
-	<th width="91"> <div align="center">Question 07</div></th>
-    <th width="98"> <div align="center">Question 08</div></th>
-    <th width="91"> <div align="center">Final Marks</div></th>
-    <span class="green">
-    <th width="10"> <div align="center"><a class="green" href="#"><i class="ace-icon fa fa-pencil bigger-130"></i></a> </div></th></span>
-    <th width="10"> <div align="center"><a class="red" href="#"><i class="ace-icon fa fa-trash-o bigger-120"></i></a> </div></th>
-  
-  
-<?php
-while($objResult = mysql_fetch_array($objQuery))
-{
-?>
-
-  <?php
-		if(isset($_GET["CusID"]))
-		{
-			if(isset($_GET["Action"]))
-			{
-	if($objResult["courseid"] == $_GET["CusID"] and $_GET["Action"] == "Edit")
-	{
-  ?>
-  <tr>
-    <td><div align="center">
-		<input type="text" name="txtEditcourseid" size="5" value="<?php echo $objResult["courseid"];?>">
-		<input type="hidden" name="hdnEditcourseid" size="5" value="<?php echo $objResult["courseid"];?>">
-	</div></td>
-    <td><input type="text" name="txtEditcoursename" size="20" value="<?php echo $objResult["coursename"];?>"></td>
-    <td><input type="text" name="txtEditlevel" size="20" value="<?php echo $objResult["level"];?>"></td>
-    
-    <td colspan="2" align="right"><div align="center">
-      <input name="btnAdd" type="button" id="btnUpdate" value="Update" OnClick="frmMain.hdnCmd.value='Update';frmMain.submit();">
-	  <input name="btnAdd" type="button" id="btnCancel" value="Cancel" OnClick="window.location='<?php echo $_SERVER["PHP_SELF"];?>';">
-    </div></td>
-  </tr>
-  <?php
-	}
-			}
-	   }
-  else
-	{
-  ?>
-  <tr>
-    <td><div align="center"><?php echo $objResult["index_no"];?></div></td>
-    <td><?php echo $objResult["reg_no"];?></td>
-    
-	 <td><?php echo $objResult["q1"];?></td>
-    <td><?php echo $objResult["q2"];?></td>
-	 <td><?php echo $objResult["q3"];?></td>
-    <td><?php echo $objResult["q4"];?></td>
-	 <td><?php echo $objResult["q5"];?></td>
-    <td><?php echo $objResult["q6"];?></td>
-	 <td><?php echo $objResult["q7"];?></td>
-    <td><?php echo $objResult["q8"];?></td>
-	<td><?php echo $objResult["final"];?></td>
-    
-    <td align="center"><a href="<?php echo $_SERVER["PHP_SELF"];?>?Action=Edit&CusID=<?php echo $objResult["courseid"];?>">Edit</a></td>
-	<td align="center"><a href="JavaScript:if(confirm('Confirm Delete?')==true){window.location='<?php echo $_SERVER["PHP_SELF"];?>?Action=Del&CusID=<?php echo $objResult["courseid"];?>';}">Delete</a></td>
-  </tr>
-  <?php
-	}
-  ?>
-<?php
-}
-?>
-  <tr>
-    <td><div align="center"><input type="text" name="txtAddcourseid" size="3"></div></td>
-    <td><input type="text" name="txtAddcoursename" size="5" ></td>
-    
-	<td><input type="text" name="txtAddcoursename" size="3" ></td>
-    <td><input type="text" name="txtAddcoursename" size="3" ></td>
-	<td><input type="text" name="txtAddcoursename" size="3" ></td>
-    <td><input type="text" name="txtAddcoursename" size="3" ></td>
-	<td><input type="text" name="txtAddcoursename" size="3" ></td>
-    <td><input type="text" name="txtAddcoursename" size="3" ></td>
-	<td><input type="text" name="txtAddcoursename" size="3" ></td>
-    <td><input type="text" name="txtAddcoursename" size="3" ></td>
-	<td><input type="text" name="txtAddcoursename" size="3" ></td>
-    
-    
-    <td colspan="2" align="right"><div align="center">
-      <input name="btnAdd"  button class="btn btn-xs btn-info" size="3"
-																i class="ace-icon fa fa-pencil bigger-120"
-															  value="Add" OnClick="frmMain.hdnCmd.value='Add';frmMain.submit();">
-    </div></td>
-	
-	
-	
-	
-	
-	
-	
-	
-	
-  </tr>
-  </tr>
-  
-</table>
-</form>
-<?php
-mysql_close($objConnect);
-?>
 	
 										</div>
 									</div>

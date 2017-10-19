@@ -1,0 +1,320 @@
+<center>
+<br>
+<?php
+include('db_config.php');
+	
+$query ="SELECT `couseid`,`coursename` FROM `add_course`";
+	
+	
+	
+$result=mysql_query($query) or die(mysql_error);
+$i =0;
+
+$query_drop = "SELECT coursename FROM add_course";
+$result2=mysql_query($query_drop);
+
+$query_drop2 = "SELECT lec_name FROM lecturers";
+$result3=mysql_query($query_drop2);
+
+
+$query_drop4 = "SELECT obj FROM evaluation_object";
+$result4=mysql_query($query_drop4);
+?>
+
+<form  action="<?php echo $_SERVER['PHP_SELF']; ?>" method="POST" >
+<table id="simple-table" class="table  table-bordered table-hover">
+											<thead>
+  <tr>
+   <th width="10"> <div align="center">Course ID</div></th>
+   <th width="20"> <div align="center">Course Name</div></th>
+	<th width="20"> <div align="center">Exam Type</div></th>
+	 
+   
+    <span class="green">
+	<th  width="2"> <div ><a class="blue" href="#"><i class="ace-icon glyphicon glyphicon-ok"></i></a> </div></th>
+    <th width="7"> <div align="center"><a class="green" href="#"><i class="ace-icon fa fa-pencil bigger-130"></i></a> </div></th></span>
+    <th width="7"> <div align="center"><a class="red" href="#"><i class="ace-icon fa fa-trash-o bigger-120"></i></a> </div></th>
+	
+   
+  </tr>
+
+<?php
+
+while($query_row =mysql_fetch_array($result))
+   {
+	 
+	
+	
+      echo "<td>";
+	   echo '<input type="text" size ="20" value ="'.$query_row['couseid'].'" name ="fn'.$i.'"/>';
+	   echo "</td>";
+	  
+
+	   echo "<td>";
+	   echo '<input type="text" size ="30" value ="'.$query_row['coursename'].'" name ="fn'.$i.'"/>';
+	   echo "</td>";
+	   
+	  
+	 echo "<td>";
+     include('db_config.php');
+     $query_drop4 = "SELECT obj FROM evaluation_object";
+     $result4=mysql_query($query_drop4);
+     echo '<input type ="hidden" /><select name="txt_year">';
+		while($row = mysql_fetch_array($result4))
+		{
+			echo "<option value='".$row['obj']."'>".$row['obj']."</option>";
+		}
+		echo "<option value='".$row['obj']."'>".$row['obj']."</option>";
+		echo '<input type ="hidden" name = "year"/>';
+	echo "</select>";	
+	
+    echo "</td>";
+	 
+	  
+		
+			echo "<td>";
+	    echo '<input type="checkbox" name="check-all'.$i.'" />';
+	    echo "</td>";
+	   
+ 
+       
+
+echo "<td>";
+	    
+		
+		 echo '<button class="btn btn-white btn-default btn-round" name ="updatebtn'.$i.'" >
+												<i class="ace-icon glyphicon glyphicon-pencil"></i>
+												
+											</button>';
+	    
+		
+		
+		
+			
+		if(isset($_POST['updatebtn'.$i.'']))
+	    {
+	    	if(isset($_POST['check-all'.$i.'']))
+	    	{
+
+               $r =$query_row['id'];
+               $f =$_POST['fn'.$i.''];
+    
+		        $query1="SELECT table_name FROM ac_year WHERE id='$r'";
+						$result1 =mysql_query($query1) ;
+						$p =mysql_fetch_object($result1);
+                       echo $p;
+		
+		  
+		  
+                $query ="UPDATE ac_year SET year ='$f'  WHERE id ='$r'";
+	   
+	             $result =mysql_query($query);
+	             if(!$result)
+	             {
+	             
+	             	 echo "<script type='text/javascript'>alert('Update failed');window.location = \"lec_ex_type.php\"</script>";
+	             }
+	             else
+	             {
+					  
+				
+							//$p =$query_row['table_name'];
+						
+		
+						$query2="DROP TABLE ".$p."";
+						$result2=mysql_query($query2);
+						
+						$uui ="ac_year_";
+						 $v="_";
+						 $yu =substr($f,0,4);
+						 $yu1 =substr($f,5,8);
+						 $uu = $uui.$yu.$v.$yu1;
+					
+						 $uu = $uui.$yu.$v.$yu1;
+						 
+						   $query1="CREATE TABLE  ".$uu." (S_Id INT(50) NOT NULL AUTO_INCREMENT, Reg_No varchar(50),Index_No varchar(50),Tittle varchar(50) ,Name varchar(50),PRIMARY KEY (S_Id))";
+							$result1 =mysql_query($query1);
+						 
+	             	 echo "<script type='text/javascript'>alert('Update successfully');window.location = \"lec_ex_type.php\"</script>";   	
+	             
+	                
+	             }
+
+	    	}
+	    	else
+	    	{
+	    	
+			echo "<script type='text/javascript'>alert('Select the check box');window.location = \"lec_ex_type.php\"</script>";
+	    		
+	    	}
+	    	
+	    }		
+
+			
+	    echo "</td>";
+
+	    echo "<td>";
+	    
+		
+		 echo '<button class="btn btn-white btn-warning btn-bold" name ="deletebtn'.$i.'" >
+												<i class="ace-icon fa fa-trash-o bigger-120 orange"></i>
+												
+											</button>';
+	    
+	    if(isset($_POST['deletebtn'.$i.'']))
+	    {
+	    	if(isset($_POST['check-all'.$i.'']))
+	    	{
+                $f =$_POST['fn'.$i.''];
+             
+                 $query ="DELETE FROM ac_year WHERE year ='".$f."'";
+	   
+	             $result =mysql_query($query);
+	             if($result)
+	             {
+	                echo "<script type='text/javascript'>alert('Delete successfully');window.location = \"lec_ex_type.php\"</script>";
+	             	
+	             }
+	             
+	             else
+	             {
+
+	             	echo "<script type='text/javascript'>alert('Delete is faild');window.location = \"lec_ex_type.php\"</script>";
+	             
+	             }
+
+	    	}
+	    	else
+	    	{
+	    		
+	    		echo "<script type='text/javascript'>alert('Select the check box')</script>";
+	    	}
+	    
+	    }
+	    echo "</td>";	
+
+	    
+
+		echo "</tr>";
+		$i++;
+		 
+	  
+   
+   }
+   echo "<tr>";
+    
+    
+
+    echo "<td>";
+  
+	echo '<input type ="hidden" /><select name="txt_course">';
+		while($row = mysql_fetch_array($result2))
+		{
+			echo "<option value='".$row['coursename']."'>".$row['coursename']."</option>";
+		}
+		
+	echo "</select>";	
+	
+	echo '</input>';
+    echo "</td>";
+	
+	 echo "<td>";
+  
+    echo '<input type ="hidden" /><select name="txt_lec">';
+		while($row = mysql_fetch_array($result3))
+		{
+			echo "<option value='".$row['lec_name']."'>".$row['lec_name']."</option>";
+		}
+		  echo '<input type ="hidden" name = "lec_name"/>';
+	echo "</select>";	
+    echo "</td>";
+	
+	 echo "</td>";
+	
+	 echo "<td>";
+    include('db_config.php');
+    $query_drop4 = "SELECT obj FROM evaluation_object";
+    $result4=mysql_query($query_drop4);
+    echo '<input type ="hidden" /><select name="txt_year">';
+		while($row = mysql_fetch_array($result4))
+		{
+			echo "<option value='".$row['obj']."'>".$row['obj']."</option>";
+		}
+		echo '<input type ="hidden" name = "year"/>';
+	echo "</select>";	
+	
+    echo "</td>";
+
+	
+
+    
+    echo "<td>";
+    /* echo '<input type ="submit" value ="Add" name ="addbtn"/>'; */
+	echo'<button class="btn btn-white btn-info btn-bold" type ="submit" name ="addbtn">
+												<i class="ace-icon glyphicon glyphicon-plus"></i>
+												
+											</button>';
+								
+    if(isset($_POST['addbtn']))
+    {
+    
+		$f =$_POST['txt_course'];
+		$p =$_POST['txt_lec'];
+		$q =$_POST['txt_year'];
+     	
+		$query_course = "SELECT `id` FROM `add_course` WHERE `couseid`='$f' ";
+		$result_course = mysql_query($query_course);
+		$row_course = mysql_fetch_array($result_course);
+		$f2 =$row_course['id'];
+		
+		$query_lec = "SELECT `id` FROM `lecturers` WHERE `lec_name`='$p' ";
+		$result_lec = mysql_query($query_lec);
+		$row_lec = mysql_fetch_array($result_lec);
+		$p2 =$row_lec['id'];
+	    
+		$query_yr = "SELECT `id` FROM `ac_year` WHERE `year`='$q' ";
+		$result_yr = mysql_query($query_yr);
+		$row_yr = mysql_fetch_array($result_yr);
+		$q2 =$row_yr['id'];
+		
+        if(!$f)
+        {
+        	echo "<script type='text/javascript'>alert('Fill detail')</script>";
+        }
+        else
+        {
+		 /*  "INSERT INTO assign_lecturer (courseid,lec_id,acdm_yr_id ) VALUES ('$f',' $p' ,'$q' )"; */
+			 $query ="INSERT INTO `assign_lecturer`(`courseid`, `lec_id`, `acdm_yr_id`) VALUES ('$f2',' $p2' ,'$q2')";
+	        $result =mysql_query($query);
+	         if(!$result)
+	             {
+	          
+	             	echo "<script type='text/javascript'>alert('Insert is faild');window.location = \"lec_ex_type.php\"</script>";
+	             	
+	             }
+	             else
+	             {
+
+	             	
+	             	echo "<script type='text/javascript'>alert('Insert successfully');window.location = \"lec_ex_type.php\"</script>";
+	             	
+	             	
+	             }
+
+        }
+        
+       
+
+    }
+   
+    echo "</td>";
+
+
+
+   echo "</tr>";
+?>
+</thead>
+</table>
+</form>
+
+</center>
